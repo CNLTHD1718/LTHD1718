@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Categories</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	 crossorigin="anonymous">
+</head>
+
+<body>
+	<br>
+	<br>
+	<br>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-6 col-md-6">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>username</th>
+							<th>state</th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody id="list">
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<script id="user-template" type="text/x-handlebars-template">
+		{{#each this}}
+			<tr>
+				<td>{{id}}</td>
+				<td><input id='ttx' value='{{username}}'>{{username}}</td>
+				<td>{{state}}</td>
+				<td class="text-right">
+                        <a class="btn btn-xs btn-danger del" href="javascript:;" role="button" data-id="{{id}}">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+					<a class="btn btn-xs btn-info update" href="javascript:;" role="button" data-id="{{id}}" data-username="{{username}}">
+						<span class="glyphicon glyphicon-check"></span>
+					</a>
+				</td>
+			</tr>
+		{{/each}}
+	</script>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	 crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	 crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js"></script>
+	<script type="text/javascript">
+		window.onload = function () {
+			$.ajax({
+				type: 'GET',
+				url: 'http://localhost:1234/api/test/all',
+				dataType: 'json',
+				timeout: 5000
+			}).done(function (data) {
+				// console.log(data);
+				var source = document.getElementById('user-template').innerHTML;
+				var template = Handlebars.compile(source);
+				var html = template(data);
+				// console.log(html);
+				$('#list').html(html);
+			});
+		}
+
+
+
+		$('#list').on('click', '.del', function () {
+			// alert('msg');
+			var trToBeDel = $(this).closest('tr');
+			var id = $(this).data('id');
+			var objToPost = {
+				id: id
+			}
+
+			var jsonToPost = JSON.stringify(objToPost);
+
+			$.ajax({
+				type: 'POST',
+				url: 'http://localhost:1234/api/test/del',
+				contentType: 'application/json',
+				dataType: 'json',
+				data: jsonToPost,
+				timeout: 10000,
+			}).done(function (data) {
+				console.log(data);
+				trToBeDel.remove();
+			}).fail(function (xhr, status, err) {
+				console.log(status);
+				console.log(err);
+			});
+		})
+
+
+		$('#list').on('click', '.update', function () {
+			// alert('msg');
+			var id = $(this).data('id');
+			var username = $(this).data('username');
+			var objToPost = {
+				id: id,
+				username: username
+			}
+
+			var jsonToPost = JSON.stringify(objToPost);
+			$.ajax({
+				type: 'POST',
+				url: 'http://localhost:1234/api/test/update',
+				contentType: 'application/json',
+				dataType: 'json',
+				data: jsonToPost,
+				timeout: 10000,
+			}).done(function (data) {
+				console.log(data);
+			}).fail(function (xhr, status, err) {
+				console.log(status);
+				console.log(err);
+			});
+		})
+	</script>
+</body>
+
+</html>
