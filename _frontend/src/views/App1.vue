@@ -50,8 +50,8 @@ export default {
 
 	methods: {
 		AddRequest() {
-			alert('test' + document.getElementById('txtName').value);
-			var self = this;
+			//alert('test' + document.getElementById('txtName').value);
+			//var self = this;
 			var objToPost = {
 				Name: document.getElementById('txtName').value,
 				Address: document.getElementById('txtAddress').value,
@@ -61,7 +61,7 @@ export default {
 			axios
 				.post('http://localhost:1234/Request/add', objToPost)
 				.then(res => {
-					alert('succes ');
+					alert('success ');
 				})
 				.catch(err => {
 					console.log(err);

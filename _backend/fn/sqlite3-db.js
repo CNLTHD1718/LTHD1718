@@ -1,5 +1,5 @@
 var sqlite3 = require('sqlite3')
-var dbFilePath = './dbTest.sqlite3';
+var dbFilePath = './dbBooking.sqlite3';
 
 class DbTestFunction {
     constructor() {

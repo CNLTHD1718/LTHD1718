@@ -3,8 +3,7 @@ var router = express.Router();
 var RequestRepo = require('../repo/requestRepos');
 var requestRepo = new RequestRepo();
 
-// lấy danh sách request
-router.get('/', (req, res) => {
+router.get('/', (req, res) => {// get list request
     requestRepo.loadAll()
         .then(rows => {
             res.json(rows);
@@ -17,7 +16,7 @@ router.get('/', (req, res) => {
         })
 })
 
-router.get('/add', (req, res) => {
+router.get('/add', (req, res) => {//add using get
     var obj = {
         Name: req.query.Name,
         Address: req.query.Address,
@@ -40,8 +39,7 @@ router.get('/add', (req, res) => {
 
 });
 
-//add using post
-router.post('/add', (req, res) => {
+router.post('/add', (req, res) => {//add using post
     var obj = {
         Name: req.body.Name,
         Address: req.body.Address,
@@ -51,6 +49,30 @@ router.post('/add', (req, res) => {
     console.log(obj);
 
     requestRepo.insert(obj).then(() => {
+        res.status(201).send(JSON.stringify({
+            stt: 'success',
+            msg: 'located success',
+            obj: obj
+        }));
+
+    }).catch(err => {
+        res.status(404).send(JSON.stringify({
+            sst: 'error',
+            err: err
+        }));
+    });
+
+});
+
+router.post('/identify', (req, res) => {//identify location 
+    var obj = {
+        Id: req.body.Id,
+        Lat: req.body.Lat,
+        Lng: req.body.Lng
+    }
+    console.log(obj);
+
+    requestRepo.updateLocate(obj).then(() => {
         res.status(201).send(JSON.stringify({
             stt: 'success',
             msg: 'add success',
@@ -65,7 +87,6 @@ router.post('/add', (req, res) => {
     });
 
 });
-
 
 router.post('/del', (req, res) => {
     var id = req.body.id;

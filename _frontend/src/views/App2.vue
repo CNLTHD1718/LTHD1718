@@ -1,18 +1,39 @@
 <template>
-  <div class="row">
-    <div class="col-sm-3 col-md-3">
-      <div class="list-group">
-        <a v-for="c in list" :key="c.Id" href="javascript:;" class="list-group-item" :class="{active: c.Id === selectedId}" @click="RequestClicked(c.Id, c.Name)">
-          {{c.Name}}
-        </a>
-      </div>
-    </div>
-    <div class="col-sm-9 col-md-9">
-      <div id="myMap">
+	<div class="row">
+		<div class="col-sm-3 col-md-3">
+			<div class="list-group">
+				<div>
+					<ul>
+						<li v-for="c in list" :key="c.Id" href="javascript:;" class="list-group-item" :class="{active: c.Id === selectedId}" @click="getThisPlace(c.Id,c.Address)">
 
-      </div>
-    </div>
-  </div>
+							<div>Ho ten: {{c.Name}}</div>
+							<div>Dia diem: {{c.Address}}</div>
+							<div>Ghi chu: {{c.Note}} </div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-9 col-md-9">
+			<div id="myMap">
+				<div>
+					<div class="input-group">
+						<gmap-autocomplete id="mapcomp" class="form-control" @place_changed="setPlace">
+						</gmap-autocomplete>
+						<button @click="addMarker" class="btn btn-primary">Find</button>
+						<button @click="locatePlace" class="btn btn-info">Locate this</button>
+
+					</div>
+					<br />
+
+				</div>
+				<br>
+				<gmap-map :center="center" :zoom="12" style="width:100%;  height: 400px;">
+					<gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" @click="center=m.position" :draggable="true" @drag="updateCoordinates"></gmap-marker>
+				</gmap-map>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -21,13 +42,29 @@ import axios from 'axios';
 export default {
 	name: 'App2',
 
+	components: {
+		//GoogleMap
+	},
+
 	data() {
 		return {
 			list: [
 				// { CatID: 1, CatName: 'Laptop'},
 				// { CatID: 2, CatName: 'Tablet'},
 			],
-			selectedId: -1
+			selectedId: -1,
+
+			center: { lat: 21.010584, lng: 105.804688 },
+			//markers: [],
+			markers: [
+				// position={
+				// 	lat: 21.010584,
+				// 	lng: 105.804688
+				// }
+			],
+			places: [],
+			coordinates: {},
+			currentPlace: null
 		};
 	},
 
@@ -40,24 +77,73 @@ export default {
 			})
 			.catch(err => {
 				console.log(err);
-      });
-      
-      // console.log("map: ", google.maps)
-            // this.map = new google.maps.Map(document.getElementById('myMap'), {
-            // center: {lat: 21.010584, lng: 105.804688},
-            // scrollwheel: false,
-            // zoom: 4
-            // })
-    
+			});
+		self.geolocate(); //create map
 	},
 
 	methods: {
-		RequestClicked(id, name) {
-			alert('test' + id + name);
+		getThisPlace(id, place) {
 			var self = this;
-
+			self.selectedId = id;
+			document.getElementById('mapcomp').value = place;
 			// // alert(JSON.stringify(c));
 			//self.$emit('userSelected', c);
+		},
+		updateCoordinates(location) {
+			var self = this;
+			self.coordinates = {
+				lat: location.latLng.lat(),
+				lng: location.latLng.lng()
+			};
+			//alert(location.latLng.lat());
+		},
+
+		locatePlace() {
+			var self = this;
+			var objToPost = {
+				Id: self.selectedId,
+				Lat: self.coordinates.lat,
+				Lng: self.coordinates.lng
+			};
+			console.log(objToPost);
+			axios
+				.post('http://localhost:1234/Request/identify', objToPost)
+				.then(res => {
+					alert('located success');
+				})
+				.catch(err => {
+					console.log(err);
+				});
+		},
+
+		//method for google map
+		setPlace(place) {
+			this.currentPlace = place;
+		},
+		addMarker() {
+			var self = this;
+			if (self.currentPlace) {
+				var marker = self.coordinates = {
+					lat: self.currentPlace.geometry.location.lat(),
+					lng: self.currentPlace.geometry.location.lng()
+				};
+				self.markers = [];
+				self.places = [];
+				self.markers.push({ position: marker });
+				self.places.push(self.currentPlace);
+				self.center = marker;
+				//this.currentPlace = null;
+			} else {
+				alert('Find something first!');
+			}
+		},
+		geolocate: function() {
+			navigator.geolocation.getCurrentPosition(position => {
+				this.center = {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude
+				};
+			});
 		}
 	}
 };
@@ -71,6 +157,9 @@ export default {
 	height: 400px; /* The height is 400 pixels */
 	width: 100%; /* The width is the width of the web page */
 }
+#mapcomp {
+	width: 600px;
+}
 h3 {
 	margin: 40px 0 0;
 }
@@ -81,6 +170,7 @@ ul {
 li {
 	display: inline-block;
 	margin: 0 10px;
+	width: 100%;
 }
 a {
 	color: #42b983;
