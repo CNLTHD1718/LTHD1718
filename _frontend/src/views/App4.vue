@@ -1,6 +1,7 @@
 <template>
 	<div class="row">
 		<div class="col-sm-4 col-md-4">
+			<button @click="logout">log out</button>
 		</div>
 		<div class="col-sm-4 col-md-4">
 			<input type="checkbox" @change="onChange" v-model="isOnline" data-toggle="toggle" data-on="<i class='fa fa-play'></i> Online" data-onstyle="success" data-off="<i class='fa fa-pause'></i> Offline" data-offstyle="danger">
@@ -8,7 +9,7 @@
 		</div>
 
 		<div class="col-sm-4 col-md-4">
-			
+
 		</div>
 	</div>
 </template>
@@ -28,45 +29,65 @@ export default {
 			isOnline: false
 		};
 	},
-	// mounted() {
-	//   var self = this;
-	//   axios.get('http://localhost:1234/user/all')
-	//     .then(res => {
-	//       self.list = res.data;
-	//     })
-	//     .catch(err => {
-	//       console.log(err);
-	//     })
-	// },
+
+	mounted() {
+		var self = this;
+		if (localStorage.token_key && localStorage.ref_token && localStorage.uid) {
+			axios({
+				method: 'post',
+				url: 'http://localhost:1234/User/auth',
+				data: {},
+				headers: {
+					'x-access-token': localStorage.token_key
+				}
+			})
+				.then(data => {
+					self.loadData(localStorage.token_key);
+					//self.driver.status =  parseInt( localStorage.driver_status);
+				})
+				.catch(err => {
+					// self
+					// 	.get_new_access_token(localStorage.ref_token, localStorage.uid)
+					// 	.then(user => {
+					// 		self.loadData(user.data.access_token);
+					// 		//self.driver.status = user.data.status;
+					// 	})
+					// 	.catch(err => {
+					// 		console.log('err catch' + err);
+					// 		self.$router.push({ name: 'Login' });
+					// 	});
+					console.log('not get new access token');
+				});
+		} else {
+			//window.location.href = 'http://localhost:3000/Login';
+			self.$router.push({ name: 'Login' });
+		}
+	},
 
 	methods: {
 		onChange() {
 			var self = this;
 			//alert('check' + this.isOnline);
-			if(self.isOnline){
-
+			if (self.isOnline) {
 			}
-			
 		},
-		AddRequest() {
-			alert('test' + document.getElementById('txtName').value);
+		logout() {},
+
+		loadData(token) {
 			var self = this;
-			var objToPost = {
-				Name: document.getElementById('txtName').value,
-				Address: document.getElementById('txtAddress').value,
-				Phone: document.getElementById('txtPhone').value,
-				Note: document.getElementById('txtNote').value
-			};
-			axios
-				.post('http://localhost:1234/Request/add', objToPost)
-				.then(res => {
-					alert('succes ');
-				})
-				.catch(err => {
-					console.log(err);
-				});
-			// // alert(JSON.stringify(c));
-			//self.$emit('userSelected', c);
+			localStorage.token_key = token;
+			//var user_type = localStorage.user_type;
+			var user_id = localStorage.uid;
+		},
+		get_new_access_token(rf, id) {
+			return axios({
+				method: 'post',
+				url: 'http://localhost:1234/Auth/new_token',
+				data: {
+					ref_token: rf,
+					id: id
+				}
+			});
 		}
 	}
 };

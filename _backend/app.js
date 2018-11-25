@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use('/Request/', requestCtrl);
-app.use('/User/', AuthRepo.verifyAccessToken, userCtrl);
+app.use('/User/', userCtrl);
 app.use('/Auth', authCtrl);
 
 app.get('/', (req, res) => {
@@ -59,14 +59,7 @@ const server = app.listen(PORT, () => {
 
 const io = require('socket.io')(server);
 
-// io.on('connection', function(socket) {
-//     console.log(socket.id)
-//     socket.on('SEND_MESSAGE', function(data) {
-//         io.emit('MESSAGE', data)
-//     });
-// });
 io.on('connection', client => {
-    //console.log(client)
     request_io.response(io, client);
 });
 

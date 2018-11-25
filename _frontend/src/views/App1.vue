@@ -41,36 +41,12 @@ export default {
 
 	data() {
 		return {
-			user: '',
-			message: '',
-			messages: [],
 			socket: io('localhost:1234')
 		};
 	},
 
-	// mounted() {
-	//   var self = this;
-	//   axios.get('http://localhost:1234/user/all')
-	//     .then(res => {
-	//       self.list = res.data;
-	//     })
-	//     .catch(err => {
-	//       console.log(err);
-	//     })
-	// },
-
-	mounted() {
-		this.socket.on('MESSAGE', data => {
-			console.log(data);
-			alert('receive');
-			// you can also do this.messages.push(data)
-		});
-	},
 	methods: {
 		AddRequestSocket() {
-			//alert('test' + document.getElementById('txtName').value);
-			alert('this');
-
 			var self = this;
 			var newReq = {
 				Name: document.getElementById('txtName').value,
@@ -78,14 +54,10 @@ export default {
 				Phone: document.getElementById('txtPhone').value,
 				Note: document.getElementById('txtNote').value
 			};
-			//this.socket.emit('SEND_MESSAGE', newReq);
-			this.socket.emit('add-new-request', newReq);
-			
-			// this.socket.emit('event-add-request', JSON.stringify(newReq));
-			//self.$emit('userSelected', c);
+
+			self.socket.emit('add-new-request', newReq);
 		},
 		AddRequest() {
-			//alert('test' + document.getElementById('txtName').value);
 			//var self = this;
 			var objToPost = {
 				Name: document.getElementById('txtName').value,
@@ -101,8 +73,6 @@ export default {
 				.catch(err => {
 					console.log(err);
 				});
-			// // alert(JSON.stringify(c));
-			//self.$emit('userSelected', c);
 		}
 	}
 };

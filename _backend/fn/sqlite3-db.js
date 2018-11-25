@@ -27,6 +27,21 @@ class DbTestFunction {
         });
     }
 
+    getOne(query, params = []){
+        return new Promise((resolve, reject)=>{
+            this.db.get(query, params, (err, result)=>{
+               if(err){
+                   console.log('running error ' + query);
+                   console.log(err);
+                   reject(err);
+               }
+               else {
+                   resolve(result);
+               }
+            });
+        });
+    }
+    
     getAll(query, params = []) {
         return new Promise((resolve, reject) => {
             this.db.all(query, params, (err, rows) => {

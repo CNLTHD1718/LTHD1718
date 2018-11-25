@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var UserRepo = require('../repo/userRepos');
-var userRepo = new UserRepo();
+var UserRepo = require('../repo/UserRepos');
+
+
 
 router.post('/auth', (req,res)=>{
     res.status(200).send({
@@ -10,7 +11,7 @@ router.post('/auth', (req,res)=>{
 })
 
 router.get('/', (req, res) => {// get list user
-    userRepo.loadAll()
+    UserRepo.loadAll()
         .then(rows => {
             res.json(rows);
             console.log(rows);
@@ -30,7 +31,7 @@ router.get('/add', (req, res) => {//add using get
         Email: req.query.Email,
         Address: req.query.Address
     }
-    requestRepo.insert(obj).then(() => {
+    UserRepo.insert(obj).then(() => {
         res.status(201).send(JSON.stringify({
             stt: 'success',
             msg: 'add success',
@@ -56,7 +57,7 @@ router.post('/add', (req, res) => {//add user
     }
     console.log(obj);
 
-    userRepo.insert(obj).then(() => {
+    UserRepo.insert(obj).then(() => {
         res.status(201).send(JSON.stringify({
             stt: 'success',
             msg: 'add user success',
@@ -78,7 +79,7 @@ router.post('/updateStatus', (req, res) => {
         Status: req.body.Status
     }
     console.log(obj)
-    userRepo.updateStatus(obj).then(() => {
+    UserRepo.updateStatus(obj).then(() => {
 
         res.status(201).send(JSON.stringify({
             stt: 'success',
@@ -101,7 +102,7 @@ router.post('/updateLocation', (req, res) => {
         Lng:req.body.Lng
     }
     console.log(obj)
-    userRepo.updateLocation(obj).then(() => {
+    UserRepo.updateLocation(obj).then(() => {
 
         res.status(201).send(JSON.stringify({
             stt: 'success',
@@ -120,7 +121,7 @@ router.post('/updateLocation', (req, res) => {
 router.post('/del', (req, res) => {
     var id = req.body.id;
     console.log(id)
-    userRepo.delete(id).then(() => {
+    UserRepo.delete(id).then(() => {
 
         res.status(201).send(JSON.stringify({
             stt: 'success',

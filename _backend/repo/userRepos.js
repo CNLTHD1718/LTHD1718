@@ -1,6 +1,6 @@
 var DbFunction = require('../fn/sqlite3-db');
 
-class TestRepo {
+class UserRepo {
     constructor() {
         this.createTable();
     }
@@ -54,4 +54,4 @@ class TestRepo {
     }
 }
 
-module.exports = TestRepo;
+module.exports = new UserRepo();

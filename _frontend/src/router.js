@@ -5,6 +5,7 @@ import App2 from './views/App2.vue';
 import App3 from './views/App3.vue';
 import App4 from './views/App4.vue';
 import Home from './views/Home.vue';
+import Login from './views/auth/Login.vue';
 
 Vue.use(Router);
 
@@ -35,6 +36,11 @@ export default new Router({
 			path: '/App4',
 			name: 'App4',
 			component: App4
+		},
+		{
+			path: '/Login',
+			name: 'Login',
+			component: Login
 		},
 		{
 			path: '*',

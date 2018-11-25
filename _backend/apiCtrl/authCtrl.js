@@ -36,11 +36,15 @@ router.post('/login', (req, res) => {
         Username: req.body.Username,
         Password: req.body.Password
     }
+    console.log(obj);
     //var type = req.body.Type;
-    UserRepo.login().then(user => {
+    UserRepo.login(obj).then(user => {
         if (user) {
+            console.log('yes user 1')
             var acToken = AuthRepo.generateAccessToken(user);
+            console.log('yes user 2:' + acToken)
             var rfToken = AuthRepo.generateRefreshToken();
+            console.log('yes user 3:' + rfToken)
 
             AuthRepo.updateRefreshToken(user.Id, rfToken)
                 .then(() => {
@@ -52,8 +56,9 @@ router.post('/login', (req, res) => {
                             //type=user.type
                         },
                         access_token: acToken,
-                        refresh_token: rfTokenF
+                        refresh_token: rfToken
                     };
+                    console.log('yes user 4:' + user_res)
                     // if (user.Type == 2) {
                     //     user_res.user.status = user.status;
                     // }
@@ -62,6 +67,7 @@ router.post('/login', (req, res) => {
                 .catch(err => {
                     res.statusCode = 500;
                     res.end('View error log on console');
+                    console.log('err here' + err)
                 })
         } else {
             res.status(404).send({
@@ -69,7 +75,7 @@ router.post('/login', (req, res) => {
             })
         }
     }).catch(err => {
-        res.end(errF);
+        res.end(err);
         console.log(err);
     })
 })

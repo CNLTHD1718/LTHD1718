@@ -1,4 +1,4 @@
 module.exports = {
     'secret': 'supersecret',
-    'lifetime': 60,
+    'lifetime': 20,
   };
