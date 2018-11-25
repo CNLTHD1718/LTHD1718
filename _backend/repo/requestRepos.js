@@ -41,6 +41,11 @@ class TestRepo {
     loadAll() {
         return DbFunction.getAll(`SELECT * FROM  Request `);//state != (-1)
     }
+    
+    loadAll_Request_Waiting(){
+        return DbFunction.getAll(`SELECT * FROM  Request WHERE Status = 0`);
+
+    }
 }
 
 module.exports = TestRepo;

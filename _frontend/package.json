@@ -12,8 +12,10 @@
     "axios": "^0.18.0",
     "bootstrap337": "^3.3.7",
     "numeral": "^2.0.6",
+    "socket.io-client": "^2.1.1",
     "vue": "^2.5.17",
     "vue-router": "^3.0.2",
+    "vue-socket.io": "^3.0.2",
     "vue2-google-maps": "^0.10.3"
   },
   "devDependencies": {

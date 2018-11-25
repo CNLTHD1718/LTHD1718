@@ -38,33 +38,26 @@
 
 <script>
 import axios from 'axios';
+import io from 'socket.io-client';
 
 export default {
 	name: 'App2',
 
-	components: {
-		//GoogleMap
-	},
-
 	data() {
 		return {
-			list: [
-				// { CatID: 1, CatName: 'Laptop'},
-				// { CatID: 2, CatName: 'Tablet'},
-			],
+			list: [],
 			selectedId: -1,
 
 			center: { lat: 21.010584, lng: 105.804688 },
-			//markers: [],
-			markers: [
-				// position={
-				// 	lat: 21.010584,
-				// 	lng: 105.804688
-				// }
-			],
+			markers: [],
 			places: [],
 			coordinates: {},
-			currentPlace: null
+			currentPlace: null,
+
+			user: '',
+			message: '',
+			messages: [],
+			socket: io('localhost:1234')
 		};
 	},
 
@@ -79,6 +72,13 @@ export default {
 				console.log(err);
 			});
 		self.geolocate(); //create map
+
+		self.socket.on('load-new-request', data => {
+			console.log(data);
+			//alert('receive');
+			self.list = data;
+			// you can also do this.messages.push(data)
+		});
 	},
 
 	methods: {
@@ -123,10 +123,10 @@ export default {
 		addMarker() {
 			var self = this;
 			if (self.currentPlace) {
-				var marker = self.coordinates = {
+				var marker = (self.coordinates = {
 					lat: self.currentPlace.geometry.location.lat(),
 					lng: self.currentPlace.geometry.location.lng()
-				};
+				});
 				self.markers = [];
 				self.places = [];
 				self.markers.push({ position: marker });
