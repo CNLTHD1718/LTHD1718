@@ -20,10 +20,11 @@
         </div>
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
-        <li class="active"><a class="navbar-brand" href="./App1">App1</a></li>
-        <li class="active"><a class="navbar-brand" href="./App2">App2</a></li>
-        <li class="active"><a class="navbar-brand" href="./App3">App3</a></li>
-        <li class="active"><a class="navbar-brand" href="./App4">App4</a></li>
+        <li class="active"><router-link to="/App1">App1</router-link></li>
+        <li class="active"><router-link to="/App2">App2</router-link></li>
+        <li class="active"><router-link to="/App3">App3</router-link></li>
+        <li class="active"><router-link to="/App4">App4</router-link></li>
+        <li class="active"><router-link to="/Login">Login</router-link></li>
         
       </ul>
 

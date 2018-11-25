@@ -14,7 +14,7 @@ router.get('/', (req, res) => {// get list user
     UserRepo.loadAll()
         .then(rows => {
             res.json(rows);
-            console.log(rows);
+            //console.log(rows);
         })
         .catch(err => {
             console.log(err);

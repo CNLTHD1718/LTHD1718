@@ -43,7 +43,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use('/Request/', requestCtrl);
-app.use('/User/', userCtrl);
+app.use('/User/',AuthRepo.verifyAccessToken, userCtrl);
+app.use('/User2/', userCtrl);
 app.use('/Auth', authCtrl);
 
 app.get('/', (req, res) => {

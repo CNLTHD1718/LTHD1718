@@ -6,8 +6,9 @@ var express = require('express'),
 router.post('/new_token', (req, res) => {
     var user_rf_token = req.body.ref_token;
     var user_id = req.body.id;
-    if (user_ref_token && user_id) {
-        UserRepo.getByToken(user_id, user_ref_token)
+    console.log('new token' + req.body);
+    if (user_rf_token && user_id) {
+        UserRepo.getByToken(user_id, user_rf_token)
             .then(user => {
                 var acToken = AuthRepo.generateAccessToken(user);
                 var user_res = {
@@ -40,11 +41,8 @@ router.post('/login', (req, res) => {
     //var type = req.body.Type;
     UserRepo.login(obj).then(user => {
         if (user) {
-            console.log('yes user 1')
             var acToken = AuthRepo.generateAccessToken(user);
-            console.log('yes user 2:' + acToken)
             var rfToken = AuthRepo.generateRefreshToken();
-            console.log('yes user 3:' + rfToken)
 
             AuthRepo.updateRefreshToken(user.Id, rfToken)
                 .then(() => {
@@ -58,7 +56,6 @@ router.post('/login', (req, res) => {
                         access_token: acToken,
                         refresh_token: rfToken
                     };
-                    console.log('yes user 4:' + user_res)
                     // if (user.Type == 2) {
                     //     user_res.user.status = user.status;
                     // }

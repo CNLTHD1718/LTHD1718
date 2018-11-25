@@ -46,20 +46,19 @@ export default {
 					//self.driver.status =  parseInt( localStorage.driver_status);
 				})
 				.catch(err => {
-					// self
-					// 	.get_new_access_token(localStorage.ref_token, localStorage.uid)
-					// 	.then(user => {
-					// 		self.loadData(user.data.access_token);
-					// 		//self.driver.status = user.data.status;
-					// 	})
-					// 	.catch(err => {
-					// 		console.log('err catch' + err);
-					// 		self.$router.push({ name: 'Login' });
-					// 	});
-					console.log('not get new access token');
+					self
+						.get_new_access_token(localStorage.ref_token, localStorage.uid)
+						.then(user => {
+							self.loadData(user.data.access_token);
+							//self.driver.status = user.data.status;
+						})
+						.catch(err => {
+							console.log('err catch' + err);
+							self.$router.push({ name: 'Login' });
+						});
+					console.log('get new access token');
 				});
 		} else {
-			//window.location.href = 'http://localhost:3000/Login';
 			self.$router.push({ name: 'Login' });
 		}
 	},
@@ -71,7 +70,14 @@ export default {
 			if (self.isOnline) {
 			}
 		},
-		logout() {},
+		logout() {
+			//localStorage.token_key && localStorage.ref_token && localStorage.uid
+			var self = this;
+			localStorage.token_key = '';
+			localStorage.ref_token = '';
+			localStorage.uid = '';
+			self.$router.push({ name: 'Login' });
+		},
 
 		loadData(token) {
 			var self = this;

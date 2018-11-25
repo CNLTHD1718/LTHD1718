@@ -76,7 +76,7 @@ export default {
 					//window.localStorage.driver_status = parseInt(res.data.user.status);
 					//window.localStorage.user_type = res.data.user.type;
 					self.$router.push({ name: 'App4' });
-					app.isLogin = true;
+					//app.isLogin = true;
 					alert('success login');
 				})
 				.catch(err => {
