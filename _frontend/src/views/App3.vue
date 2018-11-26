@@ -47,6 +47,7 @@
 		</div>
 
 		<div class="col-sm-6 col-md-6">
+			<button @click="handleRequest">handle</button>
 			<gmap-map :center="center" :zoom="12" style="width:100%;  height: 400px;">
 				<gmap-marker :key="index" v-for="(m, index) in markers" :position="m.position" @click="center=m.position" :draggable="true" @drag="updateCoordinates"></gmap-marker>
 			</gmap-map>
@@ -111,6 +112,13 @@ export default {
 			console.log(data);
 			self.listDriver = data;
 		});
+		
+		self.socket.on('hi there', data => {
+			//load list driver
+			console.log(data);
+			//self.listDriver = data;
+			alert('123')
+		});
 	},
 
 	methods: {
@@ -124,7 +132,13 @@ export default {
 			self.selectedIdDriver = id;
 			console.log('driver: ' + id);
 		},
-
+		handleRequest(){
+			var self = this;
+			var newReq = {
+				u_id: 1,//id driver here
+			};	
+			self.socket.emit('handling-request',newReq);
+		},
 		geolocate: function() {
 			navigator.geolocation.getCurrentPosition(position => {});
 		}

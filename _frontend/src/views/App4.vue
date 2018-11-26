@@ -1,27 +1,65 @@
 <template>
-	<div class="row">
-		<div class="col-sm-4 col-md-4">
-			<button @click="logout">log out</button>
-			<button @click="vieww">view</button>
+  <div class="row">
+    <div class="col-sm-4 col-md-4">
+      <button @click="logout">log out</button>
+      <button @click="vieww">view</button>
 
-		</div>
-		<div class="col-sm-4 col-md-4">
-			<input type="checkbox" @change="changeStatus" v-model="isOnline" data-toggle="toggle" data-on="<i class='fa fa-play'></i> Online" data-onstyle="success" data-off="<i class='fa fa-pause'></i> Offline" data-offstyle="danger">
-			Online
-			<button @click="acceptRequest">Accept</button>
-			<button @click="declineRequest">Decline</button>
-			<button @click="doneRequest">Done</button>
+    </div>
+    <div class="col-sm-4 col-md-4">
+      <input
+        type="checkbox"
+        @change="changeStatus"
+        v-model="isOnline"
+        data-toggle="toggle"
+        data-on="<i class='fa fa-play'></i> Online"
+        data-onstyle="success"
+        data-off="<i class='fa fa-pause'></i> Offline"
+        data-offstyle="danger"
+      >
+      Online
+      <button
+        id='btnAccept'
+        @click="acceptRequest"
+      >Accept</button>
+      <button
+        id='btnDecline'
+        @click="declineRequest"
+      >Decline</button>
+      <button
+        id='btnStart'
+        @click="declineRequest"
+      >Start</button>
+      <button
+        id='btnEnd'
+        @click="doneRequest"
+      >End</button>
 
-			<gmap-map ref="mapRef" :center="center" :zoom="15" style="width:100%;  height: 500px;">
-				<gmap-circle ref="circle" :radius="100" v-bind:fillColor="fillColor1" v-bind:center="center" :draggable='false' />
-				<gmap-marker ref="myMarker" v-bind:position="coordinates" :draggable="true" @dragend="updateCoordinates"></gmap-marker>
-			</gmap-map>
-		</div>
+      <gmap-map
+        ref="mapRef"
+        :center="center"
+        :zoom="18"
+        style="width:100%;  height: 500px;"
+      >
+        <gmap-circle
+          ref="circle"
+          :radius="100"
+          v-bind:fillColor="fillColor1"
+          v-bind:center="center"
+          :draggable='false'
+        />
+        <gmap-marker
+          ref="myMarker"
+          v-bind:position="coordinates"
+          :draggable="true"
+          @dragend="updateCoordinates"
+        ></gmap-marker>
+      </gmap-map>
+    </div>
 
-		<div class="col-sm-4 col-md-4">
+    <div class="col-sm-4 col-md-4">
 
-		</div>
-	</div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -43,6 +81,7 @@ export default {
 			currentPlace: null,
 			fillColor1: '#0000FF',
 
+			req_id: null,
 			socket: io('localhost:1234')
 		};
 	},
@@ -80,13 +119,44 @@ export default {
 		}
 
 		self.geolocate(); //create map
+		self.disableButton();
 		//self.addMarker();
-		self.testingtt();
+		//self.testingtt();
+
+		self.socket.on('hi there', data => {
+			console.log(data);
+			alert('123');
+		});
+
+		self.socket.on('hi there 2', data => {
+			//respone from server socket
+			console.log('respone from server socket');
+		});
+
+		self.socket.emit('add-user', { username: localStorage.uid }); //register username to socket server
+		self.socket.on('driver-receive-new-request', data => {
+			var self = this;
+			self.req_id = data.Id;
+			document.getElementById('btnAccept').disabled = false;
+			document.getElementById('btnDecline').disabled = false;
+			console.log('driver-receive-new-request from server ' + data);
+		});
 	},
 
 	methods: {
-		acceptRequest() {},
-		declineRequest() {},
+		acceptRequest() {
+			var self = this;
+			var newReq = {
+				u_id: localStorage.uid,
+				req_id: self.req_id
+			};
+			console.log('driver accept request')
+			console.log(newReq);
+			self.socket.emit('driver-accept-request', newReq);
+		},
+		declineRequest() {
+			self.socket.emit('driver-decline-request', newReq);
+		},
 		doneRequest() {},
 		changeStatus() {
 			var self = this;
@@ -115,6 +185,13 @@ export default {
 			};
 			self.socket.emit('driver-change-status', newReq);
 			self.$router.push({ name: 'Login' });
+		},
+
+		disableButton() {
+			document.getElementById('btnAccept').disabled = true;
+			document.getElementById('btnDecline').disabled = true;
+			document.getElementById('btnStart').disabled = true;
+			document.getElementById('btnEnd').disabled = true;
 		},
 		loadData(token) {
 			var self = this;

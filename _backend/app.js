@@ -23,27 +23,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-// var event_req = io.use(function (socket, next) {
-//     if (socket.handshake.query && socket.handshake.query.token) {
-//         jwt.verify(socket.handshake.query.token, config.secret, function (err, decoded) {
-//             if (err) return next(new Error('Authentication error'));
-//             socket.decoded = decoded;
-//             socket.u_type = socket.handshake.query.u_type;
-//             socket.u_id = socket.handshake.query.u_id;
-//             next();
-//         })
-//     } else {
-//         next(new Error('Authentication error'));
-//     }
-// })
-//     .on('connection', client => {
-//         request_io.response(io, client);
-//     })
-
-
 app.use('/Request/', requestCtrl);
-app.use('/User/',AuthRepo.verifyAccessToken, userCtrl);
+app.use('/User/', AuthRepo.verifyAccessToken, userCtrl);
 app.use('/User2/', userCtrl);
 app.use('/Auth', authCtrl);
 
@@ -60,7 +41,11 @@ const server = app.listen(PORT, () => {
 
 const io = require('socket.io')(server);
 
+var clients = [];
 io.on('connection', client => {
     request_io.response(io, client);
+    console.log('id : '+client.id)
+    //clients.push(client.id);
+    //client.emit('hi there', JSON.stringify('user'));    
 });
 

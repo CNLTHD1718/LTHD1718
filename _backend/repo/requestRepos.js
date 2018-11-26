@@ -26,7 +26,7 @@ class TestRepo {
     }
     update(obj) {
         return DbFunction.run(`UPDATE Request SET Status = ? WHERE Id = ?`,
-            [obj.Name, obj.id]);
+            [obj.Status, obj.Id]);
     }
     updateLocate(obj) {
         return DbFunction.run(`UPDATE Request SET Status = ?, Lat = ?, Lng = ? WHERE Id = ?`,
@@ -44,7 +44,9 @@ class TestRepo {
     
     loadAll_Request_Waiting(){
         return DbFunction.getAll(`SELECT * FROM  Request WHERE Status = 0`);
-
+    }
+    loadAll_Request_Ready(){
+        return DbFunction.getAll(`SELECT * FROM  Request WHERE Status = 1`);
     }
 }
 
