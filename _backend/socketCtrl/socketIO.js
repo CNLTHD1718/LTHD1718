@@ -3,7 +3,7 @@ var RequestRepo = require('../repo/requestRepos'),
     moment = require('moment');
 var requestRepo = new RequestRepo();
 var eventGetAll = (io, client) => {
-    requestRepo.loadAll_Request_Waiting()
+    requestRepo.loadAll()
         .then(rows => {
             io.sockets.emit('load-new-request', rows);
         })
@@ -61,7 +61,31 @@ module.exports.response = function (io, client) {
                 console.log('err eventGetAllDriver' + err);
             })
     });
+    
+    client.on('driver-change-location', function (data) {
+        console.log(data)
+        userRepo.updateLocation(data)
+            .then(() => {
+                console.log('driver-change-location success');
+                eventGetAllDriver(io, client);
+            })
+            .catch(err => {
+                console.log('err eventGetAllDriver' + err);
+            })
+    });
 
+    client.on('identify-location', function (data) {
+        console.log(data)
+        requestRepo.updateLocate(data)
+            .then(() => {
+                console.log('identify-location success');
+                eventGetAll(io, client);
+            })
+            .catch(err => {
+                console.log('err eventGetAll' + err);
+            })
+    });
+    
     // switch (client.u_type) {
     //     case '0':
     //         eventGetAll(io, client);

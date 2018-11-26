@@ -34,7 +34,7 @@
 							<div>Dia chi: {{c.Address}}</div>
 							<div v-if="c.Status==0">Trang thai: <font style="color:grey">Offline</font>
 							</div>
-							<div v-if="c.Status==1">Trang thai: <font style="color:green">Online</font>
+							<div v-if="c.Status==1">Trang thai: <b style="color:green">Online</b>
 							</div>
 							<div v-if="c.Status==2">Trang thai: <font style="color:yellow">Dang don khach</font>
 							</div>

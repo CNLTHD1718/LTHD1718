@@ -109,6 +109,11 @@ export default {
 			localStorage.token_key = '';
 			localStorage.ref_token = '';
 			localStorage.uid = '';
+			var newReq = {
+				Id: 1,
+				Status: 0
+			};
+			self.socket.emit('driver-change-status', newReq);
 			self.$router.push({ name: 'Login' });
 		},
 		loadData(token) {
@@ -162,6 +167,12 @@ export default {
 					lng: location.latLng.lng()
 				};
 				alert('Success');
+				var newReq = {
+					Id: 1,
+					Lat: self.coordinates.lat,
+					Lng: self.coordinates.lng
+				};
+				self.socket.emit('driver-change-location', newReq);
 			} else {
 				alert('Error : maximum is 100m !!');
 				self.coordinates = self.center;

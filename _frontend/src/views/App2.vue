@@ -106,14 +106,22 @@ export default {
 				Lng: self.coordinates.lng
 			};
 			console.log(objToPost);
-			axios
-				.post('http://localhost:1234/Request/identify', objToPost)
-				.then(res => {
-					alert('located success');
-				})
-				.catch(err => {
-					console.log(err);
-				});
+			// axios
+			// 	.post('http://localhost:1234/Request/identify', objToPost)
+			// 	.then(res => {
+			// 		alert('located success');
+			// 	})
+			// 	.catch(err => {
+			// 		console.log(err);
+			// 	});
+
+			var newReq = {
+				Id: self.selectedId,
+				Lat: self.coordinates.lat,
+				Lng: self.coordinates.lng
+			};
+			self.socket.emit('identify-location', newReq);
+			alert('located success');
 		},
 
 		//method for google map
