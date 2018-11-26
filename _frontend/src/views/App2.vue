@@ -48,7 +48,7 @@ export default {
 			list: [],
 			selectedId: -1,
 
-			center: { lat: 21.010584, lng: 105.804688 },
+			center: { lat: 10.77191, lng: 106.65358 },
 			markers: [],
 			places: [],
 			coordinates: {},

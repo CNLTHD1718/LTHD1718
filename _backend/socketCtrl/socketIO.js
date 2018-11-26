@@ -12,21 +12,21 @@ var eventGetAll = (io, client) => {
             //     msg: 'error to get list request waiting',
             //     err: err
             // });
-            console.log(err);
+            console.log('err load-new-request' + err);
         })
 }
 
-var eventGetAllReq = (io, client) => {
-    requestRepo.LoadAll()
+var eventGetAllDriver = (io, client) => {
+    userRepo.loadAll()
         .then(rows => {
-            io.sockets.emit('load-all-request', JSON.stringify(rows));
+            io.sockets.emit('load-all-driver', rows);
         })
         .catch(err => {
             // io.sockets.emit('event-request-management', JSON.stringify({
             //     msg: 'error to get list request-reciever',
             //     err: err
             // }));
-            console.log('err' + err);
+            console.log('err load-all-driver' + err);
         })
 }
 
@@ -46,7 +46,19 @@ module.exports.response = function (io, client) {
                 eventGetAll(io, client);
             })
             .catch(err => {
-                console.log('err' + err);
+                console.log('err eventGetAll' + err);
+            })
+    });
+
+    client.on('driver-change-status', function (data) {
+        console.log(data)
+        userRepo.updateStatus(data)
+            .then(() => {
+                console.log('driver-change-status success');
+                eventGetAllDriver(io, client);
+            })
+            .catch(err => {
+                console.log('err eventGetAllDriver' + err);
             })
     });
 

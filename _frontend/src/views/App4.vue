@@ -41,7 +41,9 @@ export default {
 			places: [],
 			coordinates: { lat: 10.77191, lng: 106.65358 },
 			currentPlace: null,
-			fillColor1: '#0000FF'
+			fillColor1: '#0000FF',
+
+			socket: io('localhost:1234')
 		};
 	},
 
@@ -85,13 +87,21 @@ export default {
 	methods: {
 		acceptRequest() {},
 		declineRequest() {},
-		doneRequest(){
-			
-		}
+		doneRequest() {},
 		changeStatus() {
 			var self = this;
 			if (self.isOnline) {
-				alert('ýes');
+				var newReq = {
+					Id: 1,
+					Status: 1
+				};
+				self.socket.emit('driver-change-status', newReq);
+			} else {
+				var newReq = {
+					Id: 1,
+					Status: 0
+				};
+				self.socket.emit('driver-change-status', newReq);
 			}
 		},
 		logout() {
