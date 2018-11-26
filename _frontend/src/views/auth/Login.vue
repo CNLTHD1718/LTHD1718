@@ -22,7 +22,11 @@ export default {
 
 	mounted() {
 		var self = this;
-		if (localStorage.token_key && localStorage.ref_token && localStorage.uid) {
+		if (
+			localStorage.token_key &&
+			localStorage.ref_token &&
+			localStorage.uid
+		) {
 			axios({
 				method: 'post',
 				url: 'http://localhost:1234/User/auth',
@@ -44,7 +48,8 @@ export default {
 						}
 					})
 						.then(user => {
-							window.localStorage.token_key = user.data.access_token;
+							window.localStorage.token_key =
+								user.data.access_token;
 							self.$router.push({ name: 'App4' });
 						})
 						.catch(err => {
@@ -77,10 +82,10 @@ export default {
 					//window.localStorage.user_type = res.data.user.type;
 					self.$router.push({ name: 'App4' });
 					//app.isLogin = true;
-					alert('success login');
+					//alert('success login');
 				})
 				.catch(err => {
-					console.log('err login'+err);
+					console.log('err login' + err);
 				});
 		}
 	}

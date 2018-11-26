@@ -24,43 +24,44 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
 
 export default {
-  name: 'HelloWorld',
-  msg:'hi every',
+	name: 'HelloWorld',
+	msg: 'hi every',
 	props: {
 		msg: String
 	},
 
-  // mounted() {
-  //   var self = this;
-  //   axios.get('http://localhost:1234/user/all')
-  //     .then(res => {
-  //       self.list = res.data;
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     })
-  // },
+	// mounted() {
+	//   var self = this;
+	//   axios.get('http://localhost:1234/user/all')
+	//     .then(res => {
+	//       self.list = res.data;
+	//     })
+	//     .catch(err => {
+	//       console.log(err);
+	//     })
+	// },
 
 	methods: {
 		AddRequest() {
-      alert('test'+document.getElementById("txtName").value);
-       var self = this;
-      var objToPost={
-            Name : document.getElementById("txtName").value,
-            Address : document.getElementById("txtAddress").value,
-            Phone : document.getElementById("txtPhone").value,
-            Note : document.getElementById("txtNote").value      
-      }
-       axios.post('http://localhost:1234/Request/add',objToPost)
-            .then(res => {
-             alert("succes ");
-           })
-           .catch(err => {
-             console.log(err);
-           })
+			alert('test' + document.getElementById('txtName').value);
+			var self = this;
+			var objToPost = {
+				Name: document.getElementById('txtName').value,
+				Address: document.getElementById('txtAddress').value,
+				Phone: document.getElementById('txtPhone').value,
+				Note: document.getElementById('txtNote').value
+			};
+			axios
+				.post('http://localhost:1234/Request/add', objToPost)
+				.then(res => {
+					alert('succes ');
+				})
+				.catch(err => {
+					console.log(err);
+				});
 			// // alert(JSON.stringify(c));
 			//self.$emit('userSelected', c);
 		}
