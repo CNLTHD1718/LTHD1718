@@ -81,6 +81,50 @@ var findRequestNearDriver = (id) => {
     });
 }
 
+var findNeareastDriver = (req_id) => {
+    return new Promise((resolve, reject) => {
+        requestRepo.load(req_id)
+            .then(req => {
+                if (req) {
+                    console.log('find nearest driver for request');
+                    console.log(req);
+                    userRepo.loadAll_Driver_Ready().then(drivers => {
+                        var min = null;
+                        var driver = null;
+                        if (drivers.length < 0) {
+                            resolve(null);
+                            console.log('No driver found')
+                        }
+                        req_location = {
+                            latitude: req.Lat,
+                            longitude: req.Lng
+                        }
+                        drivers.forEach(dr => {
+                            driver_location = {
+                                latitude: dr.Lat,
+                                longitude: dr.Lng
+                            }
+                            var long = haversine(driver_location, req_location);
+                            if (!min || min > long) {
+                                min = long;
+                                driver = dr;
+                            }
+                            console.log('long : ' + long)
+                        });
+                        resolve(driver);
+                        console.log()
+                        console.log('resolve ' + driver.Id + driver.Name);
+
+                    }).catch(err => reject(err));
+                } else {
+                    reject(new Error("req not found !"));
+                    console.log("req not found !")
+                }
+
+            }).catch(err => reject(err));
+    });
+}
+
 module.exports.response = function (io, client) {
 
     client.on('add-user', function (data) {
@@ -108,6 +152,39 @@ module.exports.response = function (io, client) {
             })
     });
 
+    client.on('identify-location', function (data) {
+        console.log(data)
+        var datax;
+        requestRepo.updateLocate(data)
+            .then(() => {
+                console.log('identify-location success');
+                eventGetAll(io, client);
+                return requestRepo.load(data.Id);
+            })
+            .then(data_2 => {
+                datax = data_2;
+                return findNeareastDriver(data_2.Id);
+            })
+            .then(driver => {
+                if (driver) {
+                    if (clients[driver.Id]) {
+                        console.log('data send to driver is ');
+                        console.log(datax);
+                        io.sockets.to(clients[driver.Id].socket).emit('driver-receive-new-request', datax)
+                    }
+                    else {
+                        console.log('socket cannot find driver online ')
+                    }
+                }
+                else {
+                    console.log('socket cannot find driver online ')
+                }
+            })
+            .catch(err => {
+                console.log('err socket id here ' + err);
+            })
+    });
+
     client.on('driver-change-status', function (data) {
         console.log(data)
         userRepo.updateStatus(data)
@@ -120,30 +197,7 @@ module.exports.response = function (io, client) {
             })
     });
 
-    client.on('driver-change-location', function (data) {
-        console.log(data)
-        userRepo.updateLocation(data)
-            .then(() => {
-                console.log('driver-change-location success');
-                eventGetAllDriver(io, client);
-            })
-            .catch(err => {
-                console.log('err eventGetAllDriver' + err);
-            })
-    });
-
-    client.on('identify-location', function (data) {
-        console.log(data)
-        requestRepo.updateLocate(data)
-            .then(() => {
-                console.log('identify-location success');
-                eventGetAll(io, client);
-            })
-            .catch(err => {
-                console.log('err eventGetAll' + err);
-            })
-    });
-
+    //#region system active this event
     client.on('handling-request', function (data) {
         console.log('handling-request here');
         var count = 1;
@@ -176,23 +230,122 @@ module.exports.response = function (io, client) {
         }
         fn();
     });
+    //#endregion
+
+    //#region app4 active this event
+    client.on('driver-change-location', function (data) {
+        console.log(data)
+        userRepo.updateLocation(data)
+            .then(() => {
+                console.log('driver-change-location success');
+                eventGetAllDriver(io, client);
+            })
+            .catch(err => {
+                console.log('err eventGetAllDriver' + err);
+            })
+    });
 
     client.on('driver-accept-request', function (data) {
         console.log(data);
         var req_obj = {
             Id: data.req_id,
             Status: 2
-        }//2 : da co xe nhan
-        requestRepo.update(req_obj)
-            .then(() => {
-                console.log('driver-accept-request success');
-                eventGetAll(io, client);
-            })
-            .catch(err => {
-                console.log('err driver-accept-request' + err);
-            })
+        }//2 : request has been accepted
+        if (data.u_id && data.req_id) {
+            requestRepo.update(req_obj)
+                .then(() => {
+                    //console.log('driver-accept-request success');
+                    //eventGetAll(io, client);
+                    console.log('updated request status to 2')
+                    var driver_obj = {
+                        Id: data.u_id,
+                        Status: 2
+                    }//2 : driver is picking up user
+                    console.log(driver_obj);
+                    return userRepo.updateStatus(driver_obj);
+                }).then(() => {
+                    console.log('updated driver status to 2')
+                    eventGetAll(io, client);
+                    eventGetAllDriver(io, client);
+                    console.log('driver-accept-request success');
+                })
+                .catch(err => {
+                    console.log('err driver-accept-request' + err);
+                })
+
+        } else {
+            console.log('invalid driver-accept-request')
+            console.log(data)
+        }
     });
 
+    client.on('driver-start-request', function (data) {
+        console.log(data);
+        var req_obj = {
+            Id: data.req_id,
+            Status: 3
+        }//3 : on way moving
+        if (data.u_id && data.req_id) {
+            requestRepo.update(req_obj)
+                .then(() => {
+                    //console.log('driver-accept-request success');
+                    //eventGetAll(io, client);
+                    console.log('updated request status to 3')
+                    var driver_obj = {
+                        Id: data.u_id,
+                        Status: 3
+                    }//3 : on way driving
+                    console.log(driver_obj);
+                    return userRepo.updateStatus(driver_obj);
+                }).then(() => {
+                    console.log('updated driver status to 3')
+                    eventGetAll(io, client);
+                    eventGetAllDriver(io, client);
+                    console.log('driver-start-request success');
+                })
+                .catch(err => {
+                    console.log('err driver-start-request' + err);
+                })
+
+        } else {
+            console.log('invalid driver-start-request')
+            console.log(data)
+        }
+    });
+
+    client.on('driver-done-request', function (data) {
+        console.log(data);
+        var req_obj = {
+            Id: data.req_id,
+            Status: 4
+        }//4 : done request
+        if (data.u_id && data.req_id) {
+            requestRepo.update(req_obj)
+                .then(() => {
+                    //console.log('driver-accept-request success');
+                    //eventGetAll(io, client);
+                    console.log('updated request status to 4')
+                    var driver_obj = {
+                        Id: data.u_id,
+                        Status: 1
+                    }//3 : driver is ready for new request
+                    console.log(driver_obj);
+                    return userRepo.updateStatus(driver_obj);
+                }).then(() => {
+                    console.log('updated driver status to 1')
+                    eventGetAll(io, client);
+                    eventGetAllDriver(io, client);
+                    console.log('driver-done-request success');
+                })
+                .catch(err => {
+                    console.log('err driver-done-request' + err);
+                })
+        } else {
+            console.log('invalid driver-done-request')
+            console.log(data)
+        }
+    });
+    //#endregion
 
 
 }

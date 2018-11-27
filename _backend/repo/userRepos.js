@@ -44,6 +44,9 @@ class UserRepo {
     loadAll() {
         return DbFunction.getAll(`SELECT * FROM  User `);//state != (-1)
     }
+    loadAll_Driver_Ready() {
+        return DbFunction.getAll(`SELECT * FROM  User where Status = 1`);//state != (-1)
+    }
     login(obj) {
         return DbFunction.getOne(`SELECT * FROM User  WHERE Username = ? AND Password = ? `,
         [obj.Username, obj.Password]);

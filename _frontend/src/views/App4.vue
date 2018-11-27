@@ -16,24 +16,19 @@
         data-off="<i class='fa fa-pause'></i> Offline"
         data-offstyle="danger"
       >
-      Online
-      <button
-        id='btnAccept'
-        @click="acceptRequest"
-      >Accept</button>
-      <button
-        id='btnDecline'
-        @click="declineRequest"
-      >Decline</button>
+      isOnline
       <button
         id='btnStart'
-        @click="declineRequest"
+        @click="startRequest"
+        type="button"
+        class="btn btn-success"
       >Start</button>
       <button
         id='btnEnd'
         @click="doneRequest"
+        type="button"
+        class="btn btn-warning"
       >End</button>
-
       <gmap-map
         ref="mapRef"
         :center="center"
@@ -51,18 +46,54 @@
           ref="myMarker"
           v-bind:position="coordinates"
           :draggable="true"
+          :icon="{ url: require('../assets/automobile.png')}"
           @dragend="updateCoordinates"
         ></gmap-marker>
       </gmap-map>
+
     </div>
 
     <div class="col-sm-4 col-md-4">
-
+      <div
+        class="modal fade"
+        id="overlay"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true"
+              >&times;</button>
+              <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+              <button
+                id='btnDecline'
+                @click="declineRequest"
+                type="button"
+                class="btn btn-danger"
+                style="background:#dd0000"
+              >Decline</button>
+              <button
+                id='btnAccept'
+                @click="acceptRequest"
+                type="button"
+                class="btn btn-success"
+                style="background:#3bba08"
+              >Accept</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+//import mapSettings from './mapSettings';
 import axios from 'axios';
 import io from 'socket.io-client';
 import haversine from 'haversine';
@@ -73,7 +104,9 @@ export default {
 	data() {
 		return {
 			isOnline: false,
+			timeOut: null,
 
+			directionsDisplay: new google.maps.DirectionsRenderer(),
 			center: { lat: 10.77191, lng: 106.65358 },
 			markers: [],
 			places: [],
@@ -81,8 +114,12 @@ export default {
 			currentPlace: null,
 			fillColor1: '#0000FF',
 
+			customer_LatLng: {},
+
 			req_id: null,
+			req_for_driver: {},
 			socket: io('localhost:1234')
+			//mapSettings
 		};
 	},
 
@@ -136,7 +173,18 @@ export default {
 		self.socket.emit('add-user', { username: localStorage.uid }); //register username to socket server
 		self.socket.on('driver-receive-new-request', data => {
 			var self = this;
-			self.req_id = data.Id;
+			self.customer_LatLng = null;
+			console.log('driver receive request : ');
+			console.log(data);
+			self.customer_LatLng = {
+				lat: data.Lat,
+				lng: data.Lng
+			};
+			self.req_for_driver = {
+				u_id: localStorage.uid,
+				req_id: data.Id
+			};
+			self.showNewRequest();
 			document.getElementById('btnAccept').disabled = false;
 			document.getElementById('btnDecline').disabled = false;
 			console.log('driver-receive-new-request from server ' + data);
@@ -145,30 +193,50 @@ export default {
 
 	methods: {
 		acceptRequest() {
+			$('#overlay').modal('hide');
 			var self = this;
-			var newReq = {
-				u_id: localStorage.uid,
-				req_id: self.req_id
-			};
-			console.log('driver accept request')
-			console.log(newReq);
-			self.socket.emit('driver-accept-request', newReq);
+			clearTimeout(self.timeOut);
+			console.log('driver accept request');
+			console.log(self.req_for_driver);
+			self.socket.emit('driver-accept-request', self.req_for_driver);
+			document.getElementById('btnStart').disabled = false;
+			self.showDirectionFromDriverToCustomer();
 		},
 		declineRequest() {
-			self.socket.emit('driver-decline-request', newReq);
+			$('#overlay').modal('hide');
+			alert('driver decline request');
 		},
-		doneRequest() {},
+		startRequest() {
+			var self = this;
+			self.socket.emit('driver-start-request', self.req_for_driver);
+			document.getElementById('btnEnd').disabled = false;
+		},
+		doneRequest() {
+			var self = this;
+			self.socket.emit('driver-done-request', self.req_for_driver);
+			self.updateDriverLocationAfterDone();
+			self.directionsDisplay.setMap(null);//delete previous direction
+			alert('done');
+		},
+		showNewRequest() {
+			var self = this;
+			self.timeOut = setTimeout(function() {
+				$('#overlay').modal('hide');
+				self.declineRequest();
+			}, 10000);
+			$('#overlay').modal('show');
+		},
 		changeStatus() {
 			var self = this;
 			if (self.isOnline) {
 				var newReq = {
-					Id: 1,
+					Id: localStorage.uid,
 					Status: 1
 				};
 				self.socket.emit('driver-change-status', newReq);
 			} else {
 				var newReq = {
-					Id: 1,
+					Id: localStorage.uid,
 					Status: 0
 				};
 				self.socket.emit('driver-change-status', newReq);
@@ -209,8 +277,45 @@ export default {
 				}
 			});
 		},
+		showDirectionFromDriverToCustomer() {
+			var self = this;
+			//self.$refs.mapRef.$mapObject;
+
+			self.directionsService = new google.maps.DirectionsService();
+			//this.directionsDisplay = new google.maps.DirectionsRenderer();
+			self.directionsDisplay.setMap(self.$refs.mapRef.$mapObject);
+			console.log('driver LatLng : ');
+			console.log(self.coordinates);
+			console.log('customer LatLng : ');
+			console.log(self.customer_LatLng);
+
+			self.directionsService.route(
+				{
+					origin: self.coordinates,
+					destination: self.customer_LatLng,
+					travelMode: 'DRIVING'
+				},
+				function(response, status) {
+					if (status === 'OK') {
+						self.directionsDisplay.setDirections(response);
+						console.log('driving ok');
+					} else {
+						console.log('Directions request failed due to ' + status);
+					}
+				}
+			);
+		},
+		updateDriverLocationAfterDone() {
+			var self = this;
+			self.center = self.customer_LatLng;
+			self.coordinates = self.customer_LatLng;
+		},
 
 		vieww() {
+			var self = this;
+			
+			self.directionsDisplay.setMap(null);
+
 			console.log(this.coordinates);
 			console.log(this.center);
 		},

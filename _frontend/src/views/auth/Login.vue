@@ -53,11 +53,11 @@ export default {
 							self.$router.push({ name: 'App4' });
 						})
 						.catch(err => {
-							self.login();
+							//self.login();
 						});
 				});
 		} else {
-			self.login();
+			//self.login();
 		}
 	},
 
