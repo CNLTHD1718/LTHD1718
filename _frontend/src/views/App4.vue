@@ -35,13 +35,12 @@
         :zoom="18"
         style="width:100%;  height: 500px;"
       >
-        <gmap-circle
+        <!-- <gmap-circle
           ref="circle"
-          :radius="100"
-          v-bind:fillColor="fillColor1"
+          :radius="100"          
           v-bind:center="center"
           :draggable='false'
-        />
+        /> -->
         <gmap-marker
           ref="myMarker"
           v-bind:position="coordinates"
@@ -106,7 +105,7 @@ export default {
 			isOnline: false,
 			timeOut: null,
 
-			directionsDisplay: new google.maps.DirectionsRenderer(),
+			directionsDisplay: null,
 			center: { lat: 10.77191, lng: 106.65358 },
 			markers: [],
 			places: [],
@@ -157,7 +156,7 @@ export default {
 
 		self.geolocate(); //create map
 		self.disableButton();
-		//self.addMarker();
+		self.addCircle();
 		//self.testingtt();
 
 		self.socket.on('hi there', data => {
@@ -215,7 +214,7 @@ export default {
 			var self = this;
 			self.socket.emit('driver-done-request', self.req_for_driver);
 			self.updateDriverLocationAfterDone();
-			self.directionsDisplay.setMap(null);//delete previous direction
+			self.directionsDisplay.setMap(null); //delete previous direction
 			alert('done');
 		},
 		showNewRequest() {
@@ -313,7 +312,7 @@ export default {
 
 		vieww() {
 			var self = this;
-			
+
 			self.directionsDisplay.setMap(null);
 
 			console.log(this.coordinates);
@@ -348,7 +347,8 @@ export default {
 					lat: location.latLng.lat(),
 					lng: location.latLng.lng()
 				};
-				alert('Success');
+				//alert('Success');
+				console.log('change location success');
 				var newReq = {
 					Id: 1,
 					Lat: self.coordinates.lat,
@@ -358,6 +358,8 @@ export default {
 			} else {
 				alert('Error : maximum is 100m !!');
 				self.coordinates = self.center;
+				var marker = self.$refs.myMarker.$markerObject;
+				marker.setPosition(self.center);
 			}
 			//console.log('4old ' + self.coordinates.lat + ',' + self.coordinates.lng);
 		},
@@ -377,18 +379,21 @@ export default {
 			console.log(haversine(start, end, { threshold: 100, unit: 'meter' }));
 		},
 		//MAP
-		addMarker() {
+		addCircle() {
 			var self = this;
-			var circle = new google.maps.Circle({
-				center: self.center,
-				radius: 1000,
-				fillColor: '#0000FF',
-				fillOpacity: 0.1,
-				map: this.$refs.mapRef,
-				strokeColor: '#FFFFFF',
-				strokeOpacity: 0.1,
-				strokeWeight: 2
-			});
+			setTimeout(function() {
+				var circle = new google.maps.Circle({
+					center: self.center,
+					radius: 100,
+					fillColor: '#0000FF',
+					fillOpacity: 0.1,
+					map: self.$refs.mapRef.$mapObject,
+					strokeColor: '#1818b8',
+					strokeOpacity: 0.3,
+					strokeWeight: 0.3
+				});
+				console.log(circle);
+			}, 2000); // async this after create map
 		},
 		geolocate: function() {
 			navigator.geolocation.getCurrentPosition(position => {
@@ -397,6 +402,9 @@ export default {
 				// 	lng: position.coords.longitude
 				// };
 			});
+			setTimeout(function() {
+				self.directionsDisplay = new google.maps.DirectionsRenderer();
+			}, 1000); // async this after create map
 		}
 	}
 };
