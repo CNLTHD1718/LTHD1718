@@ -154,10 +154,40 @@ export default {
 			self.$router.push({ name: 'Login' });
 		}
 
-		self.geolocate(); //create map
+		// At this point, the child GmapMap has been mounted, but
+		// its map has not been initialized.
+		// Therefore we need to write mapRef.$mapPromise.then(() => ...)
+		self.$refs.mapRef.$mapPromise
+			.then(map => {
+				//map.panTo({ lat: 1.38, lng: 103.8 });
+				self.directionsDisplay = new google.maps.DirectionsRenderer();
+				console.log('success set self.directionsDisplay');
+				var circle = new google.maps.Circle({
+					center: self.center,
+					radius: 100,
+					fillColor: '#0000FF',
+					fillOpacity: 0.1,
+					map: self.$refs.mapRef.$mapObject,
+					strokeColor: '#1818b8',
+					strokeOpacity: 0.3,
+					strokeWeight: 0.3
+				});
+				console.log('success create circle');
+			})
+			.catch(err => {
+				console.log('error create map' + err);
+			});
+
+		self
+			.geolocate()
+			.then(() => {
+				console.log('success geolocated');
+			})
+			.catch(err => {
+				console.log('error ' + err);
+			});
+
 		self.disableButton();
-		self.addCircle();
-		//self.testingtt();
 
 		self.socket.on('hi there', data => {
 			console.log(data);
@@ -312,17 +342,12 @@ export default {
 
 		vieww() {
 			var self = this;
-
 			self.directionsDisplay.setMap(null);
-
 			console.log(this.coordinates);
 			console.log(this.center);
 		},
 		updateCoordinates(location) {
 			var self = this;
-
-			//console.log('0before ' + self.coordinates.lat + ',' + self.coordinates.lng);
-
 			var center_coordinates = {
 				latitude: self.center.lat,
 				longitude: self.center.lng
@@ -378,33 +403,12 @@ export default {
 			console.log(haversine(start, end, { unit: 'meter' }));
 			console.log(haversine(start, end, { threshold: 100, unit: 'meter' }));
 		},
-		//MAP
-		addCircle() {
-			var self = this;
-			setTimeout(function() {
-				var circle = new google.maps.Circle({
-					center: self.center,
-					radius: 100,
-					fillColor: '#0000FF',
-					fillOpacity: 0.1,
-					map: self.$refs.mapRef.$mapObject,
-					strokeColor: '#1818b8',
-					strokeOpacity: 0.3,
-					strokeWeight: 0.3
-				});
-				console.log(circle);
-			}, 2000); // async this after create map
-		},
-		geolocate: function() {
-			navigator.geolocation.getCurrentPosition(position => {
-				// this.center = {
-				// 	lat: position.coords.latitude,
-				// 	lng: position.coords.longitude
-				// };
+
+		geolocate() {
+			return new Promise((resolve, reject) => {
+				navigator.geolocation.getCurrentPosition(position => {});
+				resolve();
 			});
-			setTimeout(function() {
-				self.directionsDisplay = new google.maps.DirectionsRenderer();
-			}, 1000); // async this after create map
 		}
 	}
 };
