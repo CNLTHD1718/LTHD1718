@@ -1,9 +1,14 @@
 <template>
-  <div class="row">
-    <div class="col-sm-3 col-md-3">
+  <div
+    class="row"
+    style="padding-top:10px"
+  >
+    <div class="col s3">
       <div class="list-group">
         <div>
-          Request info
+          <blockquote>
+            List request
+          </blockquote>
           <ul>
             <li
               v-for="c in listRequest"
@@ -13,25 +18,41 @@
               :class="{active: c.Id === selectedIdRequest}"
               @click="getRequest(c.Id)"
             >
-              <div>Ho ten: {{c.Name}}</div>
-              <div>Dia diem: {{c.Address}}</div>
-              <div>Ghi chu: {{c.Note}} </div>
-              <div v-if="c.Status==0">Trang thai: <font style="color:red">Chua dinh vi</font>
-              </div>
-              <div v-if="c.Status==1">Trang thai: <font style="color:blue">Da dinh vi </font>
-              </div>
-              <div v-if="c.Status==2">Trang thai: <font style="color:green">Da co xe nhan </font>
-              </div>
-              <div v-if="c.Status==3">Trang thai: <font style="color:yellow">Dang di chuyen </font>
-              </div>
-              <div v-if="c.Status==4">Trang thai: <font style="color:grey">Da hoan thanh </font>
+              <div class="card">
+                <div class="card-content">
+                  <span class="activator grey-text text-darken-4">
+                    Khach hang: {{c.Name}}
+                    <i class="material-icons right">more_vert</i></span><br />
+                  <span class="">Dia diem : {{c.Address}}</span><br />
+                  <div v-if="c.Status==0">
+                    <span class="red-text text-darken-2">Chua dinh vi</span><br />
+                  </div>
+                  <div v-if="c.Status==1">
+                    <span class="blue-text text-darken-2">Da dinh vi</span><br />
+                  </div>
+                  <div v-if="c.Status==2">
+                    <span class="green-text text-accent-3">Da co xe nhan</span><br />
+                  </div>
+                  <div v-if="c.Status==3">
+                    <span class="yellow-text text-darken-2">Dang di chuyen</span><br />
+                    <span class="yellow-text text-darken-2">Tai xe</span><br />
+                  </div>
+                  <div v-if="c.Status==4">
+                    <span class="grey-text text-darken-2">Da hoan thanh</span>
+                  </div>
+
+                </div>
+                <div class="card-reveal">
+                  <span class="card-title  activator grey-text text-darken-4">x<i class="material-icons right">close</i></span>
+                  <span class="red-text text-darken-2">Ghi chu: {{c.Note}} </span>
+                </div>
               </div>
             </li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="col-sm-3 col-md-3">
+    <div class="col s3">
       <div class="input-group">
         <div>
           Driver info
@@ -60,7 +81,7 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-md-6">
+    <div class="col s6">
       <button @click="handleRequest">test 1</button>
       <button @click="handleRequest2">test 2</button>
       <button @click="createFakeMoving">test 3</button>
@@ -167,6 +188,9 @@ export default {
 			var self = this;
 			self.selectedIdRequest = id;
 			console.log('request: ' + id);
+
+
+
 		},
 		getDriver(id) {
 			var self = this;
@@ -292,18 +316,6 @@ export default {
 					self.marker.setPosition(x);
 				}, i * 1000);
 
-				// (function(i) {
-				// 	setTimeout(function() {
-				// 		self.marker.setPosition(tempPosition);
-				// 		console.log(tempPosition);
-				// 		done = true;
-				// 	}, 1000);
-				// })(i);
-
-				//self.updateFakeMoving();
-				// setTimeout(function() {
-				// 	self.marker.setPosition(tempPosition);
-				// }, timerInterval);
 			}
 		},
 		updateFakeMoving(movingPosition) {

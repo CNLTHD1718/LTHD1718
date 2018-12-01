@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import 'bootstrap337/dist/css/bootstrap.min.css';
 
 import Vue from 'vue';
 import App from './App.vue';
