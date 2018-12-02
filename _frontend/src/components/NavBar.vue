@@ -2,7 +2,8 @@
   <div>
     <nav class="nav-wrapper indigo">
       <div class="container">
-        <a class="brand-logo">title</a>
+        <a class="brand-logo"> <router-link to="/">title</router-link></a>
+        
         <a
           class="sidenav-trigger"
           data-target="mobile-link"

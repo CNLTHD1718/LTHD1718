@@ -43,7 +43,7 @@
 
                 </div>
                 <div class="card-reveal">
-                  <span class="card-title  activator grey-text text-darken-4">x<i class="material-icons right">close</i></span>
+                  <span class="card-title  activator grey-text text-darken-4"><i class="material-icons right">close</i></span>
                   <span class="red-text text-darken-2">Ghi chu: {{c.Note}} </span>
                 </div>
               </div>

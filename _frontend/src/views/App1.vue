@@ -87,7 +87,7 @@ export default {
 			};
 
 			self.socket.emit('add-new-request', newReq);
-      M.toast({ html: 'Thêm thành công', classes: 'light-blue accent-3' });
+      M.toast({ html: 'Add Success', classes: 'light-blue accent-3' });
       self.clearImput();
 		},
 		clearImput() {

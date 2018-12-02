@@ -40,23 +40,26 @@ router.post('/login', (req, res) => {
     console.log(obj);
     //var type = req.body.Type;
     UserRepo.login(obj).then(user => {
+        console.log('check login')
+        console.log(user);
         if (user) {
             var acToken = AuthRepo.generateAccessToken(user);
             var rfToken = AuthRepo.generateRefreshToken();
-
+            console.log('logged')
+            console.log(user)
             AuthRepo.updateRefreshToken(user.Id, rfToken)
                 .then(() => {
                     var user_res = {
                         auth: true,
                         user: {
-                            uid: user.Id,
+                            Id: user.Id,
                             Username: user.Username,
-                            //type=user.type
+                            Type: user.Type
                         },
                         access_token: acToken,
                         refresh_token: rfToken
                     };
-                    // if (user.Type == 2) {
+                    // if (user.Type == 4) {
                     //     user_res.user.status = user.status;
                     // }
                     res.json(user_res);
@@ -68,12 +71,13 @@ router.post('/login', (req, res) => {
                 })
         } else {
             res.status(404).send({
-                msg: 'not found'
+                msg: 'Not Found Username or Password'
             })
+            console.log('not found user')
         }
     }).catch(err => {
-        res.end(err);
-        console.log(err);
+        res.end('err login |' + err);
+        console.log('err login |' +err);
     })
 })
 

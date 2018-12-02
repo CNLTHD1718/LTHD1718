@@ -1,5 +1,11 @@
 var DbFunction = require('../fn/sqlite3-db');
-
+/*
+Type:
+    1 App1
+    2 App2
+    3 App3
+    4 App4
+ */
 class UserRepo {
     constructor() {
         this.createTable();
@@ -17,15 +23,16 @@ class UserRepo {
              rfTokenTime INTERGER,
              Lat REAL,
              Lng REAL,
-             Status INTERGER
+             Status INTERGER,
+             Type INTERGER
          ) `;
         return DbFunction.run(sql);
     }
 
     insert(obj) {
-        return DbFunction.run(`INSERT INTO User  (Name, Username,Password,Email,Address,Status) 
-                               VALUES (?,?,?,?,?,?)`,
-            [obj.Name, obj.Username, obj.Password, obj.Email, obj.Address, 0]);
+        return DbFunction.run(`INSERT INTO User  (Name, Username,Password,Email,Address,Status,INTERGER) 
+                               VALUES (?,?,?,?,?,?,?)`,
+            [obj.Name, obj.Username, obj.Password, obj.Email, obj.Address, 0,obj,Type]);
     }
     updateStatus(obj) {
         return DbFunction.run(`UPDATE User SET Status = ? WHERE Id = ?`,
@@ -42,10 +49,10 @@ class UserRepo {
         return DbFunction.getOne(`SELECT * FROM User WHERE Id = ?`, [id])
     }
     loadAll() {
-        return DbFunction.getAll(`SELECT * FROM  User `);//state != (-1)
+        return DbFunction.getAll(`SELECT * FROM  User `);//Status != (-1)
     }
     loadAll_Driver_Ready() {
-        return DbFunction.getAll(`SELECT * FROM  User where Status = 1`);//state != (-1)
+        return DbFunction.getAll(`SELECT * FROM  User where Type = 4 AND Status = 1`);//Status != (-1)
     }
     login(obj) {
         return DbFunction.getOne(`SELECT * FROM User  WHERE Username = ? AND Password = ? `,

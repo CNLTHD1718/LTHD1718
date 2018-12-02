@@ -1,34 +1,33 @@
 <template>
   <div class="row">
-    <div class="col-sm-4 col-md-4">
+    <div class="col s4">
       <button @click="logout">log out</button>
       <button @click="vieww">view</button>
 
     </div>
-    <div class="col-sm-4 col-md-4">
-      <input
-        type="checkbox"
-        @change="changeStatus"
-        v-model="isOnline"
-        data-toggle="toggle"
-        data-on="<i class='fa fa-play'></i> Online"
-        data-onstyle="success"
-        data-off="<i class='fa fa-pause'></i> Offline"
-        data-offstyle="danger"
-      >
-      isOnline
+    <div class="col s4">
+
       <button
-        id='btnStart'
-        @click="startRequest"
+        id="btnOn"
+        class="btn waves-effect waves-light cyan pulse green"
         type="button"
-        class="btn btn-success"
-      >Start</button>
+        name="action"
+        @click="changeStatus(1)"
+      >Online
+        <i class="material-icons right">power_settings_new</i>
+      </button>
+
       <button
-        id='btnEnd'
-        @click="doneRequest"
+        id="btnOff"
+        class="btn waves-effect waves-light pulse green"
         type="button"
-        class="btn btn-warning"
-      >End</button>
+        name="action"
+        style="opacity: .4;"
+        @click="changeStatus(0)"
+      >Offline
+        <i class="material-icons right">power_settings_new</i>
+      </button>
+
       <gmap-map
         ref="mapRef"
         :center="center"
@@ -49,54 +48,57 @@
           @dragend="updateCoordinates"
         ></gmap-marker>
       </gmap-map>
+      <div
+        class="=row"
+        id='modelRequest'
+      >
+        <button
+          class="btn waves-effect waves-light green nodpadd"
+          @click="acceptRequest()"
+          type="button"
+          style="height: 50px;"
+        >
+          Accept<i class="material-icons left">check</i></button>
+        <button
+          class="btn waves-effect waves-light red nodpadd"
+          @click="declineRequest()"
+          type="button"
+          style="height: 50px;"
+        >
+          Decline<i class="material-icons left">block</i></button>
+      </div>
+      <div
+        class="row"
+        id='modelProcess'
+      >
+        <button
+          id='btnStart'
+          @click="startRequest"
+          class="btn  waves-effect waves-light green  nodpadd"
+          type="button"
+          style="height: 50px;"
+        >Start</button>
+        <button
+          id='btnEnd'
+          @click="doneRequest"
+          class="btn waves-effect waves-light grey  pulse nodpadd"
+        >End</button>
+      </div>
 
     </div>
 
-    <div class="col-sm-4 col-md-4">
-      <div
-        class="modal fade"
-        id="overlay"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-hidden="true"
-              >&times;</button>
-              <h4 class="modal-title">Modal title</h4>
-            </div>
-            <div class="modal-body">
-              <button
-                id='btnDecline'
-                @click="declineRequest"
-                type="button"
-                class="btn btn-danger"
-                style="background:#dd0000"
-              >Decline</button>
-              <button
-                id='btnAccept'
-                @click="acceptRequest"
-                type="button"
-                class="btn btn-success"
-                style="background:#3bba08"
-              >Accept</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="col s4">
+
     </div>
   </div>
 </template>
 
 <script>
-//import mapSettings from './mapSettings';
+
 import axios from 'axios';
 import io from 'socket.io-client';
 import haversine from 'haversine';
-
+import $ from 'jquery';
 export default {
 	name: 'App4',
 
@@ -124,35 +126,35 @@ export default {
 
 	mounted() {
 		var self = this;
-		if (localStorage.token_key && localStorage.ref_token && localStorage.uid) {
-			axios({
-				method: 'post',
-				url: 'http://localhost:1234/User/auth',
-				data: {},
-				headers: {
-					'x-access-token': localStorage.token_key
-				}
-			})
-				.then(data => {
-					self.loadData(localStorage.token_key);
-					//self.driver.status =  parseInt( localStorage.driver_status);
-				})
-				.catch(err => {
-					self
-						.get_new_access_token(localStorage.ref_token, localStorage.uid)
-						.then(user => {
-							self.loadData(user.data.access_token);
-							//self.driver.status = user.data.status;
-						})
-						.catch(err => {
-							//console.log('err catch' + err);
-							self.$router.push({ name: 'Login' });
-						});
-					console.log('get new access token');
-				});
-		} else {
-			self.$router.push({ name: 'Login' });
-		}
+		// if (localStorage.token_key && localStorage.ref_token && localStorage.uid) {
+		// 	axios({
+		// 		method: 'post',
+		// 		url: 'http://localhost:1234/User/auth',
+		// 		data: {},
+		// 		headers: {
+		// 			'x-access-token': localStorage.token_key
+		// 		}
+		// 	})
+		// 		.then(data => {
+		// 			self.loadData(localStorage.token_key);
+		// 			//self.driver.status =  parseInt( localStorage.driver_status);
+		// 		})
+		// 		.catch(err => {
+		// 			self
+		// 				.get_new_access_token(localStorage.ref_token, localStorage.uid)
+		// 				.then(user => {
+		// 					self.loadData(user.data.access_token);
+		// 					//self.driver.status = user.data.status;
+		// 				})
+		// 				.catch(err => {
+		// 					//console.log('err catch' + err);
+		// 					self.$router.push({ name: 'Login' });
+		// 				});
+		// 			console.log('get new access token');
+		// 		});
+		// } else {
+		// 	self.$router.push({ name: 'Login' });
+		// }
 
 		// At this point, the child GmapMap has been mounted, but
 		// its map has not been initialized.
@@ -187,12 +189,8 @@ export default {
 				console.log('error ' + err);
 			});
 
-		self.disableButton();
-
-		self.socket.on('hi there', data => {
-			console.log(data);
-			alert('123');
-		});
+		$('#btnOff').hide();
+		$('#btnOn').show();
 
 		self.socket.on('hi there 2', data => {
 			//respone from server socket
@@ -214,25 +212,23 @@ export default {
 				req_id: data.Id
 			};
 			self.showNewRequest();
-			document.getElementById('btnAccept').disabled = false;
-			document.getElementById('btnDecline').disabled = false;
 			console.log('driver-receive-new-request from server ' + data);
 		});
 	},
 
 	methods: {
 		acceptRequest() {
-			$('#overlay').modal('hide');
+			$('#modelRequest').fadeOut();
 			var self = this;
 			clearTimeout(self.timeOut);
 			console.log('driver accept request');
 			console.log(self.req_for_driver);
 			self.socket.emit('driver-accept-request', self.req_for_driver);
-			document.getElementById('btnStart').disabled = false;
-			self.showDirectionFromDriverToCustomer();
+			self.showDirectionFromDriverToCustomer();			
+			$('#modelProcess').fadeIn();
 		},
 		declineRequest() {
-			$('#overlay').modal('hide');
+			$('#modelRequest').fadeOut();
 			alert('driver decline request');
 		},
 		startRequest() {
@@ -246,16 +242,26 @@ export default {
 			self.updateDriverLocationAfterDone();
 			self.directionsDisplay.setMap(null); //delete previous direction
 			alert('done');
+			$('#modelProcess').fadeOut();
 		},
 		showNewRequest() {
 			var self = this;
+			$('#modelRequest').fadeIn();
 			self.timeOut = setTimeout(function() {
-				$('#overlay').modal('hide');
 				self.declineRequest();
 			}, 10000);
-			$('#overlay').modal('show');
 		},
-		changeStatus() {
+		checc() {
+			alert('Your toast was');
+		},
+		changeStatus(x) {
+			if (x == 0) {
+				$('#btnOff').hide();
+				$('#btnOn').show();
+			} else {
+				$('#btnOn').hide();
+				$('#btnOff').show();
+			}
 			var self = this;
 			if (self.isOnline) {
 				var newReq = {
@@ -282,13 +288,6 @@ export default {
 			};
 			self.socket.emit('driver-change-status', newReq);
 			self.$router.push({ name: 'Login' });
-		},
-
-		disableButton() {
-			document.getElementById('btnAccept').disabled = true;
-			document.getElementById('btnDecline').disabled = true;
-			document.getElementById('btnStart').disabled = true;
-			document.getElementById('btnEnd').disabled = true;
 		},
 		loadData(token) {
 			var self = this;
@@ -415,7 +414,20 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style >
+/* .ddriver {
+	padding: 0 !important;
+}*/
+.nodpadd {
+	border-radius: 0px !important;
+	width: 50%;
+}
+
+/* .btn, .btn-large, .btn-small, .btn-flat {
+    border: none;
+     border-radius: 0px !important; 
+     padding: 0 0 !important
+} */
 h3 {
 	margin: 40px 0 0;
 }
