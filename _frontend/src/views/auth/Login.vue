@@ -1,6 +1,20 @@
 <template>
   <div class="had-container">
 
+ <h3>Drop Down Demo</h3>
+      <ul id = "dropdown" class = "dropdown-content">
+         <li><a href = "#">Inbox<span class = "badge">12</span></a></li>
+         <li><a href = "#!">Unread<span class = "new badge">4</span></a></li>
+         <li><a href = "#">Sent</a></li>
+         <li class = "divider"></li>
+         <li><a href = "#">Outbox<span class = "badge">14</span></a></li>
+      </ul>
+      
+      <a class = "dropdown-button" href = "#" data-activates = "dropdown">Mail Box
+         <i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
+
+
     <div class="parallax-container logueo">
       <div class="parallax"><img src="https://alistapart.com/d/438/fig-6--background-blend-mode.jpg"></div>
       <div class="row"><br>

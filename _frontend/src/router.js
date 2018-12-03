@@ -6,7 +6,6 @@ import App3 from './views/App3.vue';
 import App4 from './views/App4.vue';
 import Home from './views/Home.vue';
 import Login from './views/auth/Login.vue';
-import Login1 from './views/auth/login1.vue';
 
 Vue.use(Router);
 
@@ -45,11 +44,6 @@ var router = new Router({
 			path: '/Login',
 			name: 'Login',
 			component: Login
-		},
-		{
-			path: '/Login1',
-			name: 'Login1',
-			component: Login1
 		},
 		{
 			path: '*',
