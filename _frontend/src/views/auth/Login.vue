@@ -1,17 +1,6 @@
 <template>
   <div class="had-container">
 
- <h3>Drop Down Demo</h3>
-      <ul id = "dropdown" class = "dropdown-content">
-         <li><a href = "#">Inbox<span class = "badge">12</span></a></li>
-         <li><a href = "#!">Unread<span class = "new badge">4</span></a></li>
-         <li><a href = "#">Sent</a></li>
-         <li class = "divider"></li>
-         <li><a href = "#">Outbox<span class = "badge">14</span></a></li>
-      </ul>
-      
-      <a class = "dropdown-button" href = "#" data-activates = "dropdown">Mail Box
-         <i class = "mdi-navigation-arrow-drop-down right"></i></a>
 
 
 
@@ -161,10 +150,14 @@ export default {
 				.then(res => {
 					localStorage.ref_token = res.data.refresh_token;
 					localStorage.access_token = res.data.access_token;
-					localStorage.User = res.data.user;
 					localStorage.role = res.data.user.Type;
 					localStorage.Id = res.data.user.Id;
-					console.log(res.data.user);
+
+					localStorage.setItem('UserObj', JSON.stringify(res.data.user));
+					var retrievedObject = localStorage.getItem('UserObj');
+
+					console.log('retrievedObject: ', JSON.parse(retrievedObject));
+					
 					switch (res.data.user.Type) {
 						case 1:
 							self.$router.push({ name: 'App1' });

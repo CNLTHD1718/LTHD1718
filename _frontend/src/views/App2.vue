@@ -69,9 +69,10 @@
             ref="myMarker"
             :draggable="true"
             v-bind:position="coordinates"
-            :icon="{ url: require('../assets/automobile.png')}"
+            
             @dragend="updateCoordinates"
           ></gmap-marker>
+					<!-- :icon="{ url: require('../assets/automobile.png')}" -->
         </gmap-map>
       </div>
     </div>
@@ -156,6 +157,7 @@ export default {
 				lat: location.latLng.lat(),
 				lng: location.latLng.lng()
 			};
+			M.toast({ html: 'Changed location success', classes: 'light-blue accent-3' });
 		},
 
 		locatePlace() {
