@@ -5,17 +5,16 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <link rel="icon" href="https://materializecss.com/images/favicon/apple-touch-icon-152x152.png">
 
   <title>He Thong Dat Xe</title>
-
-  <!--Import Google Icon Font-->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- Compiled and minified CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <style>
-
-  </style>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="<%= BASE_URL %>layout/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="<%= BASE_URL %>layout/css/mdb.min.css" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <link href="<%= BASE_URL %>layout/css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
 </head>
 
 <body>
@@ -28,21 +27,31 @@
   <!-- built files will be auto injected -->
 </body>
 
+<!-- SCRIPTS -->
+<!-- JQuery -->
+<script type="text/javascript" src="<%= BASE_URL %>layout/js/jquery-3.3.1.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="<%= BASE_URL %>layout/js/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="<%= BASE_URL %>layout/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="<%= BASE_URL %>layout/js/mdb.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<style>
+  .toast {
+    opacity: 1 !important;
+    margin-top: 100px;
+    background: #00be45;
+  }
 
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<!-- Compiled and minified JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  #toast-container {
+    margin-top: 55px;
+  }
+</style>
 
 <script>
   $(document).ready(function () {
-    $('.sidenav').sidenav();
-    $('.parallax').parallax();
-    $(".dropdown-trigger").dropdown({
-      coverTrigger: false,
-      hover: true
-    });
-
-
+   
   });
 
 

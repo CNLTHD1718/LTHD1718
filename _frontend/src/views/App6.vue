@@ -1,132 +1,89 @@
 <template>
-  <div
-    class="col s4"
-    style="margin:0 auto;"
-  >
+    <div class="col s4"  style="margin:0 auto;">
 
-    <button
-      id="btnOn"
-      class="btn waves-effect waves-light cyan pulse green"
-      type="button"
-      name="action"
-      @click="changeStatus(1)"
-    ><i
-        class="fa fa-power-off"
-        aria-hidden="true"
-      ></i>
-      OFFLINE
-    </button>
+      <button
+        id="btnOn"
+        class="btn waves-effect waves-light cyan pulse green"
+        type="button"
+        name="action"
+        @click="changeStatus(1)"
+      >Online
+        <i class="material-icons right">power_settings_new</i>
+      </button>
 
-    <button
-      id="btnOff"
-      class="btn waves-effect waves-light pulse green"
-      type="button"
-      name="action"
-      style="opacity: .4;display:none"
-      @click="changeStatus(0)"
-    >READY
-    </button>
+      <button
+        id="btnOff"
+        class="btn waves-effect waves-light pulse green"
+        type="button"
+        name="action"
+        style="opacity: .4;"
+        @click="changeStatus(0)"
+      >Offline
+        <i class="material-icons right">power_settings_new</i>
+      </button>
 
-    <gmap-map
-      ref="mapRef"
-      :center="center"
-      :zoom="18"
-      style="width:100%;  height: 400px;"
-    >
-      <gmap-marker
-        ref="myMarker"
-        v-bind:position="coordinates"
-        :draggable="true"
-        :icon="{ url: require('../assets/automobile.png')}"
-        @dragend="updateCoordinates"
-      ></gmap-marker>
-    </gmap-map>
-
-    <!-- Button trigger modal -->
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-toggle="modal"
-      @click="openmodal"
-    >
-      Launch demo modal
-    </button>
-
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="modalreq"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
+      <gmap-map
+        ref="mapRef"
+        :center="center"
+        :zoom="18"
+        style="width:100%;  height: 500px;"
+      >
+        <!-- <gmap-circle
+          ref="circle"
+          :radius="100"          
+          v-bind:center="center"
+          :draggable='false'
+        /> -->
+        <gmap-marker
+          ref="myMarker"
+          v-bind:position="coordinates"
+          :draggable="true"
+          :icon="{ url: require('../assets/automobile.png')}"
+          @dragend="updateCoordinates"
+        ></gmap-marker>
+      </gmap-map>
       <div
-        class="modal-dialog"
-        role="document"
+        class="=row"
+        id='modelRequest'
       >
-        <div class="modal-content">
-          <div class="modal-body">
-            <div class="col-lg-7">
-
-              <!-- Category -->
-              <a
-                href="#!"
-                class="indigo-text"
-              >
-                <h6 class="font-weight-bold mb-1"><i class="fas fa-suitcase pr-2"></i>New Request</h6>
-              </a>
-              <!-- Post title -->
-              <h5 class="mb-2">Dia chi khach hang</h5>
-              <h5 class="mb-2">Cach 10km</h5>
-              <h5 class="mb-2">SDT</h5>
-              <h5 class="mb-2">Ghi chu</h5>
-
-            </div>
-            <!-- Grid column -->
-            <div
-              id="modelRequest1"
-              class="btn-group"
-              role="group"
-              style="width: 100%;"
-            >
-              <button
-                type="button"
-                class="btn btn-success btnm"
-                @click="acceptRequest()"
-              >Accept</button>
-              <button
-                type="button"
-                class="btn btn-red btnm"
-                @click="declineRequest()"
-              >Decline</button>
-            </div>
-          </div>
-        </div>
+        <button
+          class="btn waves-effect waves-light green nodpadd"
+          @click="acceptRequest()"
+          type="button"
+          style="height: 50px;"
+        >
+          Accept<i class="material-icons left">check</i></button>
+        <button
+          class="btn waves-effect waves-light red nodpadd"
+          @click="declineRequest()"
+          type="button"
+          style="height: 50px;"
+        >
+          Decline<i class="material-icons left">block</i></button>
       </div>
-    </div>
-    <div
-      style="width: 100%;display:none"
-      id="modelProcess"
-    >
-      <button
-        id='btnStart'
-        @click="startRequest"
-        class="btn waves-effect waves-light green"
-        type="button"
-        style="height: 50px;width: 100%;"
+
+	  <div
+        class="=row"
       >
-        Start</button>
-      <button
-        id='btnEnd'
-        @click="doneRequest"
-        class="btn waves-effect waves-light red "
-        type="button"
-        style="height: 50px;width: 100%;"
-      >
-        End</button>
+        <button
+          id='btnStart'
+          @click="startRequest"
+          class="btn waves-effect waves-light green nodpadd"
+          type="button"
+          style="height: 50px;"
+        >
+          Start<i class="material-icons left">play_arrow</i></button>
+        <button
+          id='btnEnd'
+          @click="doneRequest"
+          class="btn waves-effect waves-light red nodpadd"
+          type="button"
+          style="height: 50px;"
+        >
+          End<i class="material-icons left">block</i></button>
+      </div>
+
     </div>
-  </div>
 
 </template>
 
@@ -134,7 +91,7 @@
 import axios from 'axios';
 import io from 'socket.io-client';
 import haversine from 'haversine';
-import $AB from 'jquery';
+import $ from 'jquery';
 export default {
 	name: 'App4',
 
@@ -162,12 +119,7 @@ export default {
 
 	mounted() {
 		var self = this;
-
-		$AB(document).ready(function() {
-			$('#modalreq').on('hidden.bs.modal', function() {
-				self.declineRequest();
-			});
-		});
+		self.hideComponents();
 		// if (localStorage.token_key && localStorage.ref_token && localStorage.uid) {
 		// 	axios({
 		// 		method: 'post',
@@ -232,14 +184,17 @@ export default {
 				console.log('error ' + err);
 			});
 
+		$('#btnOff').hide();
+		$('#btnOn').show();
+
 		self.socket.on('hi there 2', data => {
 			//respone from server socket
 			console.log('respone from server socket');
 		});
-
-		self.socket.emit('add-user', { username: self.$store.state.user.Id }); //register username to socket server
-		console.log('add user socket' + self.$store.state.user.Id);
-
+		var driver = JSON.parse(localStorage.getItem('UserObj'));
+		self.socket.emit('add-user', { username: self.driver.Id }); //register username to socket server
+		console.log('add user socket')
+		console.log(self.driver.Id)
 		self.socket.on('driver-receive-new-request', data => {
 			var self = this;
 			self.customer_LatLng = null;
@@ -250,7 +205,7 @@ export default {
 				lng: data.Lng
 			};
 			self.req_for_driver = {
-				u_id: self.$store.state.user.Id,
+				u_id: localStorage.uid,
 				req_id: data.Id
 			};
 			self.showNewRequest();
@@ -259,12 +214,13 @@ export default {
 	},
 
 	methods: {
-		openmodal() {
-			$('#modalreq').modal('show');
-		},		
+		hideComponents() {
+			$('#modelRequest').hide();
+			$('#modelProcess').hide();
+		},
 		acceptRequest() {
 			var self = this;
-			$('#modalreq').modal('hide');
+			$('#modelRequest').fadeOut();
 			clearTimeout(self.timeOut);
 			console.log('driver accept request');
 			console.log(self.req_for_driver);
@@ -274,7 +230,7 @@ export default {
 		},
 		declineRequest() {
 			var self = this;
-			$('#modalreq').modal('hide');
+			$('#modelRequest').fadeOut();
 			clearTimeout(self.timeOut);
 			alert('driver decline request');
 		},
@@ -293,7 +249,7 @@ export default {
 		},
 		showNewRequest() {
 			var self = this;
-			$('#modalreq').modal('show');
+			$('#modelRequest').fadeIn();
 			self.timeOut = setTimeout(function() {
 				self.declineRequest();
 			}, 5000);
@@ -392,7 +348,7 @@ export default {
 			console.log(this.coordinates);
 			console.log(this.center);
 		},
-
+		
 		updateCoordinates(location) {
 			var self = this;
 			var center_coordinates = {
@@ -468,27 +424,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style >
-.btnm {
-	width: 50%;
-}
-.modal-body {
-	padding: 0px !important;
-	padding-top: 1rem !important;
-}
 /* .ddriver {
 	padding: 0 !important;
 }*/
-/* .nodpadd {
+.nodpadd {
 	border-radius: 0px !important;
 	width: 50%;
-} */
+}
 
 /* .btn, .btn-large, .btn-small, .btn-flat {
     border: none;
      border-radius: 0px !important; 
      padding: 0 0 !important
 } */
-/* h3 {
+h3 {
 	margin: 40px 0 0;
 }
 ul {
@@ -501,5 +450,5 @@ li {
 }
 a {
 	color: #42b983;
-} */
+}
 </style>

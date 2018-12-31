@@ -1,63 +1,99 @@
 <template>
-  <div class="row">
-    <div class="col s4"></div>
-    <div class="col s4">
-      <h1>{{ msg }}</h1>
-      <form>
-        <div class="input-field col s12">
-          <i class="material-icons prefix">account_circle</i>
-          <input
-            id="txtName"
-            type="text"
-            class="validate"
-          >
-          <label for="icon_prefix">First Name</label>
+
+  <div
+    class="container-fluid"
+    style="z-index:9;background-image: url(https://www.grab.com/vn/wp-content/uploads/sites/11/2016/08/bike_banner.jpg);"
+  >
+
+    <div class="container">
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+          <!-- Card -->
+          <div class="card">
+
+            <!-- Card body -->
+            <div class="card-body">
+
+              <!-- Material form register -->
+              <form>
+                <p class="h4 text-center py-4">App1</p>
+
+                <!-- Material input text -->
+                <div class="md-form">
+                  <i class="fa fa-user prefix grey-text"></i>
+                  <input
+                    type="text"
+                    id="txtName"
+                    class="form-control"
+                  >
+                  <label
+                    for="txtName"
+                    class="font-weight-light"
+                  >Name</label>
+                </div>
+
+                <!-- Material input email -->
+                <div class="md-form">
+                  <i class="fa fa-envelope prefix grey-text"></i>
+                  <input
+                    type="email"
+                    id="txtPhone"
+                    class="form-control"
+                  >
+                  <label
+                    for="txtPhone"
+                    class="font-weight-light"
+                  >Phone</label>
+                </div>
+
+                <!-- Material input email -->
+                <div class="md-form">
+                  <i class="fa fa-exclamation-triangle prefix grey-text"></i>
+                  <input
+                    type="email"
+                    id="txtAddress"
+                    class="form-control"
+                  >
+                  <label
+                    for="txtAddress"
+                    class="font-weight-light"
+                  >Address</label>
+                </div>
+
+                <!--Textarea with icon prefix-->
+                <div class="md-form amber-textarea active-amber-textarea-2">
+                  <i class="fas fa-pencil-alt prefix"></i>
+                  <textarea
+                    type="text"
+                    id="txtNote"
+                    class="md-textarea form-control"
+                    rows="3"
+                  ></textarea>
+                  <label for="txtNote">Note</label>
+                </div>
+
+                <div class="text-center py-4 mt-3">
+                  <button
+                    class="btn btn-green accent-4"
+                    type="button"
+                    style="background:#00B23E;"
+                    @click='AddRequestSocket'
+                  >ADD</button>
+                </div>
+              </form>
+              <!-- Material form register -->
+            </div>
+            <!-- Card body -->
+
+          </div>
+          <!-- Card -->
         </div>
 
-        <div class="input-field col s12">
-          <i class="material-icons prefix">phone</i>
-          <input
-            id="txtPhone"
-            type="tel"
-            class="validate"
-          >
-          <label for="icon_telephone">Telephone</label>
-        </div>
-
-        <div class="input-field col s12">
-          <i class="material-icons prefix">address</i>
-          <input
-            id="txtAddress"
-            class="validate"
-            type="text"
-          >
-          <label for="icon_telephone">Address</label>
-        </div>
-        <div class="input-field col s12">
-          <i class="material-icons prefix">note</i>
-          <textarea
-            id="txtNote"
-            class="materialize-textarea"
-          ></textarea>
-          <label for="icon_telephone">Note</label>
-        </div>
-
-        <!-- <button type="button" class="btn btn-primary" @click="AddRequest()">Add</button> -->
-        <button
-          class="btn waves-effect waves-light green accent-4"
-          type="button"
-          name="action"
-          @click="AddRequestSocket()"
-          style="float: right;"
-        >Submit
-          <i class="material-icons right ">send</i>
-        </button>
-
-      </form>
+      </div>
     </div>
-    <div class="col s4"></div>
 
   </div>
+
 </template>
 
 <script>
@@ -85,10 +121,23 @@ export default {
 				Phone: document.getElementById('txtPhone').value,
 				Note: document.getElementById('txtNote').value
 			};
-
+			// toastr.options = {
+			//       "closeButton": true,
+			//       "debug": false,
+			//       "positionClass": "toast-bottom-left",
+			//       "onclick": null,
+			//       "showDuration": "1000",
+			//       "hideDuration": "2000",
+			//       "timeOut": "3000",
+			//       "extendedTimeOut": "2000",
+			//       "showEasing": "swing",
+			//       "hideEasing": "linear",
+			//       "showMethod": "fadeIn",
+			//       "hideMethod": "fadeOut"
+			//   };
 			self.socket.emit('add-new-request', newReq);
-      M.toast({ html: 'Add Success', classes: 'light-blue accent-3' });
-      self.clearImput();
+			toastr.success('Add Success', { timeOut: 3000 });
+			self.clearImput();
 		},
 		clearImput() {
 			$('#txtName').val('');
@@ -119,18 +168,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-	margin: 40px 0 0;
-}
-ul {
-	list-style-type: none;
-	padding: 0;
-}
-li {
-	display: inline-block;
-	margin: 0 10px;
-}
-a {
-	color: #42b983;
-}
 </style>

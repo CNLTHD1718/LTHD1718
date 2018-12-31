@@ -1,62 +1,60 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <div
-        class="col-md-3"
-        style="height: 500px; overflow-y: scroll;"
-      >
+  <div
+    class="row"
+    style="padding-top:10px"
+  >
+    <div class="col s3">
+      <div class="list-group">
+        <div>
+          <blockquote>
+            List request
+          </blockquote>
+          <ul>
+            <li
+              v-for="c in listRequest"
+              :key="c.Id"
+              href="javascript:;"
+              class="list-group-item"
+              :class="{active: c.Id === selectedIdRequest}"
+              @click="getRequest(c.Id)"
+            >
+              <div class="card">
+                <div class="card-content">
+                  <span class="activator grey-text text-darken-4">
+                    Khach hang: {{c.Name}}
+                    <i class="material-icons right">more_vert</i></span><br />
+                  <span class="">Dia diem : {{c.Address}}</span><br />
+                  <div v-if="c.Status==0">
+                    <span class="red-text text-darken-2">Chua dinh vi</span><br />
+                  </div>
+                  <div v-if="c.Status==1">
+                    <span class="blue-text text-darken-2">Da dinh vi</span><br />
+                  </div>
+                  <div v-if="c.Status==2">
+                    <span class="green-text text-accent-3">Da co xe nhan</span><br />
+                  </div>
+                  <div v-if="c.Status==3">
+                    <span class="yellow-text text-darken-2">Dang di chuyen</span><br />
+                    <span class="yellow-text text-darken-2">Tai xe</span><br />
+                  </div>
+                  <div v-if="c.Status==4">
+                    <span class="grey-text text-darken-2">Da hoan thanh</span>
+                  </div>
 
-        <div
-          class="list-group"
-          v-for="c in listRequest"
-          :key="c.Id"
-          href="javascript:;"
-          :class="{active: c.Id === selectedIdRequest}"
-          @click="getRequest(c.Id)"
-        >
-
-          <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable">
-            <!-- Card content -->
-            <a href="javascript:;">
-              <div class="card-body card-body-cascade">
-                <!-- Label -->
-                <h6 class="pink-text"><i class="fa fa-user"></i>Khach hang: {{c.Name}}</h6>
-                <!-- Title -->
-                <h6 class="green-text"><i class="fa fa-map-marker"></i>Dia diem : {{c.Address}}</h6>
-                <!-- Text -->
-                <h6 class="purple-text"><i class="fa fa-sticky-note"></i>Ghi chu: {{c.Note}} </h6>
-
-                <div class="dvif" v-if="c.Status==0">
-                  <h6 class="red-text"><i class="fa fa-location-arrow"></i>Chua dinh vi</h6><br />
                 </div>
-                <div  class="dvif" v-if="c.Status==1">
-                  <h6 class="blue-text"><i class="fa fa-location-arrow"></i>Da dinh vi</h6><br />
-                </div>
-                <div class="dvif"  v-if="c.Status==2">
-                  <h6 class="green-text"><i class="fa fa-location-arrow"></i>Da co xe nhan</h6><br />
-                </div>
-                <div class="dvif"  v-if="c.Status==3">
-                  <h6 class="yellow-text"><i class="fa fa-location-arrow"></i>Dang di chuyen</h6><br />
-                  <h6 class="yellow-text">Tai xe</h6><br />
-                </div>
-                <div  class="dvif" v-if="c.Status==4">
-                  <h6 class="grey-text"><i class="fa fa-location-arrow"></i>Da hoan thanh</h6>
+                <div class="card-reveal">
+                  <span class="card-title  activator grey-text text-darken-4"><i class="material-icons right">close</i></span>
+                  <span class="red-text text-darken-2">Ghi chu: {{c.Note}} </span>
                 </div>
               </div>
-            </a>
-          </div>
-          <!-- Card Narrower -->
-
+            </li>
+          </ul>
         </div>
-
       </div>
-
-      <div
-        class="col-md-3"
-        style="height: 500px; overflow-y: scroll;"
-      >
-<div>
+    </div>
+    <div class="col s3">
+      <div class="input-group">
+        <div>
           Driver info
           <ul>
             <li
@@ -81,9 +79,10 @@
           </ul>
         </div>
       </div>
+    </div>
 
-      <div class="col-md-6">
-				<button @click="handleRequest">test 1</button>
+    <div class="col s6">
+      <button @click="handleRequest">test 1</button>
       <button @click="handleRequest2">test 2</button>
       <button @click="createFakeMoving">test 3</button>
       <button @click="startRouteAnimation">test 4</button>
@@ -100,8 +99,8 @@
           :icon="{ url: require('../assets/automobile.png')}"
         ></gmap-marker>
       </gmap-map>
-      </div>
     </div>
+
   </div>
 </template>
 
@@ -189,6 +188,9 @@ export default {
 			var self = this;
 			self.selectedIdRequest = id;
 			console.log('request: ' + id);
+
+
+
 		},
 		getDriver(id) {
 			var self = this;
@@ -313,6 +315,7 @@ export default {
 					console.log(tempPosition);
 					self.marker.setPosition(x);
 				}, i * 1000);
+
 			}
 		},
 		updateFakeMoving(movingPosition) {
@@ -341,13 +344,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.card {
-	margin-top: 7px !important;
-}
-.dvif {
-	height: 6px;
-}
-/* h3 {
+h3 {
 	margin: 40px 0 0;
 }
 ul {
@@ -361,5 +358,5 @@ li {
 }
 a {
 	color: #42b983;
-} */
+}
 </style>

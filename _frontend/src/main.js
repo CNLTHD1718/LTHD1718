@@ -5,7 +5,7 @@ import App from './App.vue';
 import router from './router'
 import numeral from 'numeral';
 import * as VueGoogleMaps from "vue2-google-maps";
-// import VueSocketIO from 'vue-socket.io';
+import store from './store';
 
 Vue.use(VueGoogleMaps, {
   load: {
@@ -31,5 +31,6 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app');

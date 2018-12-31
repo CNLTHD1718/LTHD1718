@@ -1,98 +1,105 @@
 <template>
-  <div class="had-container">
+  <div>
+    <div class="container">
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-6">
+          <!-- Card -->
+          <div class="card">
 
+            <!-- Card body -->
+            <div class="card-body">
 
+              <!-- Material form register -->
+              <form>
+                <p class="h4 text-center py-4">Sign in</p>
 
-
-    <div class="parallax-container logueo">
-      <div class="parallax"><img src="https://alistapart.com/d/438/fig-6--background-blend-mode.jpg"></div>
-      <div class="row"><br>
-        <div class="col m8 s8 offset-m2 offset-s2 center">
-          <h4 class="truncate bg-card-user">
-            <!-- <img
-              src="https://cdn3.iconfinder.com/data/icons/happily-colored-snlogo/128/medium.png"
-              alt=""
-              class="circle responsive-img"
-            > -->
-            <div class="row login">
-              <h4>He Thong Dat Xe</h4>
-              <form class="col s12">
-                <div class='row'>
-                  <div class='input-field col m12'>
-                    <i class="material-icons iconis prefix">account_box</i>
-                    <input
-                      type='text'
-                      name='username'
-                      id='username'
-                    />
-                    <label for='username'>Username</label>
-                  </div>
+                <!-- Material input text -->
+                <div class="md-form">
+                  <i class="fa fa-user prefix grey-text"></i>
+                  <input
+                    type="text"
+                    required
+                    v-model="username"
+                    value='1'
+                    class="form-control"
+                  >
+                  <label
+                    for="materialFormCardNameEx"
+                    class="font-weight-light"
+                  >Username</label>
                 </div>
-                <div class="row">
-                  <div class="input-field col s12">
-                    <i class="material-icons iconis prefix">enhanced_encryption</i>
-                    <input
-                      type="password"
-                      name="password"
-                      id="password"
-                    >
-                    <label for="password">Pasword</label>
-                  </div>
-                  <label style='float: right;'>
-                    <a><b style="color: #F5F5F5;">Forgot Password?</b></a>
-                  </label>
+
+                <!-- Material input password -->
+                <div class="md-form">
+                  <i class="fa fa-lock prefix grey-text"></i>
+                  <input
+                    required
+                    v-model="password"
+                    type="password"
+                    value='1'
+                    class="form-control"
+                  >
+                  <label
+                    for="materialFormCardPasswordEx"
+                    class="font-weight-light"
+                  >Password</label>
                 </div>
-                <div class="row">
+
+                <div class="text-center py-4 mt-3">
                   <button
-                    class="btn waves-effect waves-light"
+                    class="btn btn-cyan"
                     type="button"
-                    v-on:click="login()"
+										@click="login"
                   >Login</button>
                 </div>
               </form>
+              <!-- Material form register -->
+
             </div>
-          </h4>
+            <!-- Card body -->
+          </div>
+          <!-- Card -->
         </div>
       </div>
     </div>
   </div>
-</template>
 
+</template>
 <script>
 import axios from 'axios';
 export default {
-	name: 'Login',
 	data() {
 		return {
-			// user: {
-			// 	username: '',
-			// 	password: ''
-			// }
+			username: '',
+			password: ''
 		};
 	},
-	mounted(){
-		var self=this;
-		if(localStorage.ref_token&&localStorage.access_token&&localStorage.User&&localStorage.role)
-		{
+	mounted() {
+		var self = this;
+		if (
+			localStorage.ref_token &&
+			localStorage.access_token &&
+			localStorage.User &&
+			localStorage.role
+		) {
 			switch (localStorage.role) {
-						case '1':
-							self.$router.push({ name: 'App1' });
-							break;
-						case '2':
-							self.$router.push({ name: 'App2' });
-							break;
-						case '3':
-							self.$router.push({ name: 'App3' });
-							break;
-						case '4':
-							self.$router.push({ name: 'App4' });
-							break;
-						default:
-							console.log(localStorage.role);
-							console.log('not found type');
-							break;
-					}
-					
+				case '1':
+					self.$router.push({ name: 'App1' });
+					break;
+				case '2':
+					self.$router.push({ name: 'App2' });
+					break;
+				case '3':
+					self.$router.push({ name: 'App3' });
+					break;
+				case '4':
+					self.$router.push({ name: 'App4' });
+					break;
+				default:
+					console.log(localStorage.role);
+					console.log('not found type');
+					break;
+			}
 		}
 	},
 	//#region mount
@@ -138,7 +145,38 @@ export default {
 	// },
 	//#endregion
 	methods: {
-		login() {
+		login: function() {
+			var self = this;
+			let Username = self.username;
+			let Password = self.password;
+			self.$store
+				.dispatch('login', { Username, Password })
+				.then(res => {
+					console.log('login success view');
+					console.log(res);
+					switch (res.Type) {
+						case 1:
+							self.$router.push({ name: 'App1' });
+							break;
+						case 2:
+							self.$router.push({ name: 'App2' });
+							break;
+						case 3:
+							self.$router.push({ name: 'App3' });
+							break;
+						case 4:
+							self.$router.push({ name: 'App4' });
+							break;
+						default:
+							console.log(res.data.user.Type);
+							console.log('not found type');
+							break;
+					}
+				})
+				// .then(() => self.$router.push('/'))
+				.catch(err => console.log(err));
+		},
+		login22() {
 			var self = this;
 
 			var objToPost = {
@@ -157,7 +195,7 @@ export default {
 					var retrievedObject = localStorage.getItem('UserObj');
 
 					console.log('retrievedObject: ', JSON.parse(retrievedObject));
-					
+
 					switch (res.data.user.Type) {
 						case 1:
 							self.$router.push({ name: 'App1' });
@@ -188,51 +226,3 @@ export default {
 	}
 };
 </script>
-
-<style scoped>
-body {
-	display: flex;
-	min-height: 100vh;
-	flex-direction: column;
-}
-
-main {
-	flex: 1 0 auto;
-}
-.brand-logo > img {
-	width: 50px;
-	height: 50px;
-	margin-top: 5px;
-}
-/* Menu - profile */
-.bg-card-user {
-	background: rgba(0, 77, 64, 0.5);
-	padding: 15px 0;
-}
-.truncate > img {
-	width: 180px;
-	margin-top: 6px;
-	margin-bottom: 6px;
-}
-/* FOOTER */
-footer .foot-text {
-	margin-top: 10px;
-}
-
-/* LOGIN */
-.logueo {
-	/* PARALLAX */
-	height: 650px !important;
-}
-i.iconis {
-	font-size: 1em !important;
-	margin-top: 8px;
-}
-.login {
-	border: 1px solid #fff;
-	width: 80%;
-	margin: 0 auto;
-	background-color: rgba(255, 255, 255, 0.7);
-	padding: 20px;
-}
-</style>

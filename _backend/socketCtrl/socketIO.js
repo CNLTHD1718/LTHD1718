@@ -285,6 +285,7 @@ module.exports.response = function (io, client) {
             Id: data.req_id,
             Status: 3
         }//3 : on way moving
+        console.log(data.u_id)
         if (data.u_id && data.req_id) {
             requestRepo.update(req_obj)
                 .then(() => {
