@@ -108,10 +108,22 @@ export default {
 
 	data() {
 		return {
-			socket: io('localhost:1234')
+			socket: io('localhost:1234'),
+			timeOut: null
 		};
 	},
-
+	mounted() {
+		var self = this;
+		self.socket.emit('add-user', { username: self.$store.state.user.Id }); //register username to socket server
+		self.socket.on('res-add-new-request', data => {
+			console.log(data);
+			clearTimeout(self.timeOut);
+			if (data.res == 'success') {
+				self.clearImput();
+				toastr.success('Add Success', { timeOut: 3000 });
+			} else toastr.error('Add Err', { timeOut: 3000 });
+		});
+	},
 	methods: {
 		AddRequestSocket() {
 			var self = this;
@@ -119,25 +131,17 @@ export default {
 				Name: document.getElementById('txtName').value,
 				Address: document.getElementById('txtAddress').value,
 				Phone: document.getElementById('txtPhone').value,
-				Note: document.getElementById('txtNote').value
+				Note: document.getElementById('txtNote').value,
+				uid: self.$store.state.user.Id
 			};
-			// toastr.options = {
-			//       "closeButton": true,
-			//       "debug": false,
-			//       "positionClass": "toast-bottom-left",
-			//       "onclick": null,
-			//       "showDuration": "1000",
-			//       "hideDuration": "2000",
-			//       "timeOut": "3000",
-			//       "extendedTimeOut": "2000",
-			//       "showEasing": "swing",
-			//       "hideEasing": "linear",
-			//       "showMethod": "fadeIn",
-			//       "hideMethod": "fadeOut"
-			//   };
 			self.socket.emit('add-new-request', newReq);
-			toastr.success('Add Success', { timeOut: 3000 });
-			self.clearImput();
+
+			self.timeOut = setTimeout(function() {
+				self.NotRespone();
+			}, 10000);
+		},
+		NotRespone() {
+			toastr.error('Not responding from server', { timeOut: 3000 });
 		},
 		clearImput() {
 			$('#txtName').val('');

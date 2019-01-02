@@ -6,29 +6,12 @@ import App3 from './views/App3.vue';
 import App4 from './views/App4.vue';
 import Home from './views/Home.vue';
 import Login from './views/auth/Login.vue';
-import logintest from './views/auth/logintest.vue';
-import app1test from './views/auth/app1test.vue';
 import store from './store.js';
 
 Vue.use(Router);
 
 var router = new Router({
 	routes: [
-		{
-			path: '/app1test',
-			name: 'app1test',
-			component: app1test,
-			meta: {
-				requiresAuth: true,
-				roles: ['USER1']
-			}
-		},
-		{
-			path: '/logintest',
-			name: 'logintest',
-			component: logintest,
-			roles: ['USER2']
-		},
 		{
 			path: '/',
 			name: 'Home',
@@ -38,7 +21,7 @@ var router = new Router({
 			path: '/App1',
 			name: 'App1',
 			component: App1,
-			// meta: { requiresAuth: true }
+			meta: { requiresAuth: true }
 		},
 		{
 			path: '/App2',
@@ -50,7 +33,7 @@ var router = new Router({
 			path: '/App3',
 			name: 'App3',
 			component: App3,
-			// meta: { requiresAuth: true }
+			meta: { requiresAuth: true }
 		},
 		{
 			path: '/App4',

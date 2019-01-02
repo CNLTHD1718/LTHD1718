@@ -32,7 +32,7 @@ class UserRepo {
     insert(obj) {
         return DbFunction.run(`INSERT INTO User  (Name, Username,Password,Email,Address,Status,INTERGER) 
                                VALUES (?,?,?,?,?,?,?)`,
-            [obj.Name, obj.Username, obj.Password, obj.Email, obj.Address, 0,obj,Type]);
+            [obj.Name, obj.Username, obj.Password, obj.Email, obj.Address, 0, obj, Type]);
     }
     updateStatus(obj) {
         return DbFunction.run(`UPDATE User SET Status = ? WHERE Id = ?`,
@@ -51,16 +51,25 @@ class UserRepo {
     loadAll() {
         return DbFunction.getAll(`SELECT * FROM  User `);//Status != (-1)
     }
-    loadAll_Driver_Ready() {
-        return DbFunction.getAll(`SELECT * FROM  User where Type = 4 AND Status = 1`);//Status != (-1)
+    loadAll_Driver_Ready(driversDecline) {
+        var notIn = '';
+        if (driversDecline.length > 0) {
+            notIn = ' AND Id NOT IN(';
+            driversDecline.forEach(dr => {
+                notIn += dr + ',';
+            })
+            notIn = notIn.slice(0, -1);
+            notIn += ')';
+        }
+        return DbFunction.getAll(`SELECT * FROM  User where Type = 4 AND Status = 1` + notIn);//Status != (-1)
     }
     login(obj) {
         return DbFunction.getOne(`SELECT * FROM User  WHERE Username = ? AND Password = ? `,
-        [obj.Username, obj.Password]);
+            [obj.Username, obj.Password]);
     }
-    getByToken(id, token){
+    getByToken(id, token) {
         return DbFunction.getOne(`SELECT * FROM User WHERE Id = ? AND rfToken = ?`,
-        [id, token]);
+            [id, token]);
     }
 }
 

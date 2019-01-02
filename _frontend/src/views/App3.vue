@@ -1,5 +1,211 @@
 <template>
   <div class="container-fluid">
+    <div
+      class="row d-flex justify-content-center"
+      style="background-color: #f2f2f2;"
+    >
+      <h3 class="font-weight-bold green-text">List request</h3>
+    </div>
+    <div class="row">
+      <div class="col-1-5">
+        <h4>
+          <span class="badge badge-danger">Chua dinh vi </span>
+          <span class="badge badge-danger fr"> {{listRequest0.length}}</span>
+        </h4>
+        <div
+          class="list-group"
+          v-for="c in listRequest0"
+          :key="c.Id"
+          href="javascript:;"
+          :class="{active: c.Id === selectedIdRequest}"
+          @click="getRequest(c.Id)"
+        >
+
+          <!-- Card Narrower -->
+          <div class="card card-cascade narrower hoverable">
+            <!-- Card content -->
+            <a href="javascript:;">
+              <div class="card-body card-body-cascade">
+                <!-- Label -->
+                <h6 class="green-text"><i class="fa fa-calendar"></i>
+                  <font class="black-text font-weight-bold"> 01/01/2018 abcd</font>
+                </h6>
+                <h6 class="green-text"><i class="fa fa-user"></i>
+                  <font class="black-text font-weight-bold"> {{c.Name}}</font>
+                </h6>
+                <!-- Title -->
+                <h6 class="green-text"><i class="fa fa-map-marker"></i>
+                  <font class="black-text "> {{c.Address}}</font>
+                </h6>
+                <!-- Text -->
+                <h6 class="green-text"><i class="fa fa-sticky-note"></i>
+                  <font class="black-text "> {{c.Note}}</font>
+                </h6>
+              </div>
+            </a>
+          </div>
+          <!-- Card Narrower -->
+
+        </div>
+
+      </div>
+      <div class="col-1-5">
+        <h4><span class="badge badge-primary">Da dinh vi</span>
+          <span class="badge badge-primary fr"> {{listRequest1.length}}</span></h4>
+        <div
+          class="list-group"
+          v-for="c in listRequest1"
+          :key="c.Id"
+          href="javascript:;"
+          :class="{active: c.Id === selectedIdRequest}"
+          @click="getRequest(c.Id)"
+        >
+
+          <!-- Card Narrower -->
+          <div class="card card-cascade narrower hoverable">
+            <!-- Card content -->
+            <a href="javascript:;">
+              <div class="card-body card-body-cascade">
+                <!-- Label -->
+                <h6 class="green-text"><i class="fa fa-user"></i>
+                  <font class="black-text font-weight-bold"> {{c.Name}}</font>
+                </h6>
+                <!-- Title -->
+                <h6 class="green-text"><i class="fa fa-map-marker"></i>
+                  <font class="black-text "> {{c.Address}}</font>
+                </h6>
+                <!-- Text -->
+                <h6 class="green-text"><i class="fa fa-sticky-note"></i>
+                  <font class="black-text "> {{c.Note}}</font>
+                </h6>
+
+              </div>
+            </a>
+          </div>
+          <!-- Card Narrower -->
+
+        </div>
+      </div>
+      <div class="col-1-5">
+        <h4><span class="badge badge-success">Da co xe nhan</span>
+          <span class="badge badge-success fr"> {{listRequest2.length}}</span></h4>
+        <div
+          class="list-group"
+          v-for="c in listRequest2"
+          :key="c.Id"
+          href="javascript:;"
+          :class="{active: c.Id === selectedIdRequest}"
+          @click="getRequest(c.Id)"
+        >
+
+          <!-- Card Narrower -->
+          <div class="card card-cascade narrower hoverable">
+            <!-- Card content -->
+            <a href="javascript:;">
+              <div class="card-body card-body-cascade">
+                <!-- Label -->
+                <h6 class="green-text"><i class="fa fa-user"></i>
+                  <font class="black-text font-weight-bold"> {{c.Name}}</font>
+                </h6>
+                <!-- Title -->
+                <h6 class="green-text"><i class="fa fa-map-marker"></i>
+                  <font class="black-text "> {{c.Address}}</font>
+                </h6>
+                <!-- Text -->
+                <h6 class="green-text"><i class="fa fa-sticky-note"></i>
+                  <font class="black-text "> {{c.Note}}</font>
+                </h6>
+
+              </div>
+            </a>
+          </div>
+          <!-- Card Narrower -->
+
+        </div>
+      </div>
+      <div class="col-1-5">
+        <h4><span class="badge badge-warning">Dang di chuyen</span>
+          <span class="badge badge-warning fr"> {{listRequest3.length}}</span></h4>
+        <div
+          class="list-group"
+          v-for="c in listRequest3"
+          :key="c.Id"
+          href="javascript:;"
+          :class="{active: c.Id === selectedIdRequest}"
+          @click="getRequest(c.Id)"
+        >
+
+          <!-- Card Narrower -->
+          <div class="card card-cascade narrower hoverable">
+            <!-- Card content -->
+            <a href="javascript:;">
+              <div class="card-body card-body-cascade">
+                <!-- Label -->
+                <h6 class="green-text"><i class="fa fa-user"></i>
+                  <font class="black-text font-weight-bold"> {{c.Name}}</font>
+                </h6>
+                <!-- Title -->
+                <h6 class="green-text"><i class="fa fa-map-marker"></i>
+                  <font class="black-text "> {{c.Address}}</font>
+                </h6>
+                <!-- Text -->
+                <h6 class="green-text"><i class="fa fa-sticky-note"></i>
+                  <font class="black-text "> {{c.Note}}</font>
+                </h6>
+
+              </div>
+            </a>
+          </div>
+          <!-- Card Narrower -->
+
+        </div>
+      </div>
+      <div class="col-1-5">
+        <h4><span class="badge badge-light">Da hoan tat</span>
+          <span class="badge badge-light fr"> {{listRequest4.length}}</span></h4>
+        <div
+          class="list-group"
+          v-for="c in listRequest4"
+          :key="c.Id"
+          href="javascript:;"
+          :class="{active: c.Id === selectedIdRequest}"
+          @click="getRequest(c.Id)"
+        >
+
+          <!-- Card Narrower -->
+          <div class="card card-cascade narrower hoverable">
+            <!-- Card content -->
+            <a href="javascript:;">
+              <div class="card-body card-body-cascade">
+                <!-- Label -->
+                <h6 class="green-text"><i class="fa fa-user"></i>
+                  <font class="black-text font-weight-bold"> {{c.Name}}</font>
+                </h6>
+                <!-- Title -->
+                <h6 class="green-text"><i class="fa fa-map-marker"></i>
+                  <font class="black-text "> {{c.Address}}</font>
+                </h6>
+                <!-- Text -->
+                <h6 class="green-text"><i class="fa fa-sticky-note"></i>
+                  <font class="black-text "> {{c.Note}}</font>
+                </h6>
+
+              </div>
+            </a>
+          </div>
+          <!-- Card Narrower -->
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <h5 class="pt-3"><strong style="color:#00BA51;">List request {{listRequest.length}}</strong></h5>
+      </div>
+      <div class="col-md-9">
+        Info driver
+      </div>
+    </div>
     <div class="row">
       <div
         class="col-md-3"
@@ -21,26 +227,46 @@
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
                 <!-- Label -->
-                <h6 class="pink-text"><i class="fa fa-user"></i>Khach hang: {{c.Name}}</h6>
+                <h6 class="green-text"><i class="fa fa-user"></i>
+                  <font class="black-text font-weight-bold"> {{c.Name}}</font>
+                </h6>
                 <!-- Title -->
-                <h6 class="green-text"><i class="fa fa-map-marker"></i>Dia diem : {{c.Address}}</h6>
+                <h6 class="green-text"><i class="fa fa-map-marker"></i>
+                  <font class="black-text "> {{c.Address}}</font>
+                </h6>
                 <!-- Text -->
-                <h6 class="purple-text"><i class="fa fa-sticky-note"></i>Ghi chu: {{c.Note}} </h6>
-
-                <div class="dvif" v-if="c.Status==0">
+                <h6 class="green-text"><i class="fa fa-sticky-note"></i>
+                  <font class="black-text "> {{c.Note}}</font>
+                </h6>
+                <div
+                  class="dvif"
+                  v-if="c.Status==0"
+                >
                   <h6 class="red-text"><i class="fa fa-location-arrow"></i>Chua dinh vi</h6><br />
                 </div>
-                <div  class="dvif" v-if="c.Status==1">
+                <div
+                  class="dvif"
+                  v-if="c.Status==1"
+                >
                   <h6 class="blue-text"><i class="fa fa-location-arrow"></i>Da dinh vi</h6><br />
                 </div>
-                <div class="dvif"  v-if="c.Status==2">
+                <div
+                  class="dvif"
+                  v-if="c.Status==2"
+                >
                   <h6 class="green-text"><i class="fa fa-location-arrow"></i>Da co xe nhan</h6><br />
                 </div>
-                <div class="dvif"  v-if="c.Status==3">
+                <div
+                  class="dvif"
+                  v-if="c.Status==3"
+                >
                   <h6 class="yellow-text"><i class="fa fa-location-arrow"></i>Dang di chuyen</h6><br />
                   <h6 class="yellow-text">Tai xe</h6><br />
                 </div>
-                <div  class="dvif" v-if="c.Status==4">
+                <div
+                  class="dvif"
+                  v-if="c.Status==4"
+                >
                   <h6 class="grey-text"><i class="fa fa-location-arrow"></i>Da hoan thanh</h6>
                 </div>
               </div>
@@ -52,54 +278,157 @@
 
       </div>
 
-      <div
-        class="col-md-3"
-        style="height: 500px; overflow-y: scroll;"
-      >
-<div>
-          Driver info
-          <ul>
-            <li
-              v-for="c in listDriver"
-              :key="c.Id"
-              href="javascript:;"
-              class="list-group-item"
-              :class="{active: c.Id === selectedIdDriver}"
-              @click="getDriver(c.Id)"
-            >
-              <div>Ho ten: {{c.Name}}</div>
-              <div>Dia chi: {{c.Address}}</div>
-              <div v-if="c.Status==0">Trang thai: <font style="color:grey">Offline</font>
-              </div>
-              <div v-if="c.Status==1">Trang thai: <b style="color:green">Online</b>
-              </div>
-              <div v-if="c.Status==2">Trang thai: <font style="color:yellow">Dang don khach</font>
-              </div>
-              <div v-if="c.Status==3">Trang thai: <font style="color:orange">Dang cho khach</font>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <!-- <div class="col-md-9">
+        <button @click="handleRequest">test 1</button>
+        <button @click="handleRequest2">test 2</button>
+        <button @click="createFakeMoving">test 3</button>
+        <button @click="startRouteAnimation">test 4</button>
+        <gmap-map
+          ref="mapRef"
+          :center="center"
+          :zoom="12"
+          style="width:100%;  height: 400px;"
+        >
+          <gmap-marker
+            ref="myMarker"
+            v-bind:position="oldPosition"
+            :draggable="true"
+            :icon="{ url: require('../assets/automobile.png')}"
+          ></gmap-marker>
+        </gmap-map>
+      </div> -->
+    </div>
 
-      <div class="col-md-6">
-				<button @click="handleRequest">test 1</button>
-      <button @click="handleRequest2">test 2</button>
-      <button @click="createFakeMoving">test 3</button>
-      <button @click="startRouteAnimation">test 4</button>
-      <gmap-map
-        ref="mapRef"
-        :center="center"
-        :zoom="12"
-        style="width:100%;  height: 400px;"
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="modalreq"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+      data-backdrop="false"
+    >
+      <div
+        class="modal-dialog modal-lg modal-notify modal-success"
+        role="document"
       >
-        <gmap-marker
-          ref="myMarker"
-          v-bind:position="oldPosition"
-          :draggable="true"
-          :icon="{ url: require('../assets/automobile.png')}"
-        ></gmap-marker>
-      </gmap-map>
+        <div class="modal-content" 
+              style="height: 550px;	overflow-y: auto; overflow-x: hidden;">
+          <!--Header-->
+          <div class="modal-header">
+            <p class="heading lead font-weight-bold">Request detail</p>
+
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span
+                aria-hidden="true"
+                class="white-text"
+              >×</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="row col-lg-12 " style="padding-bottom: 10px; !important">
+              <!-- Category -->
+              <div class="col-md-6 ">
+                <h6 class="font-weight-bold mb-1 green-text"><i class="fas fa-suitcase pr-2"></i>Info Request</h6>
+
+                <!-- Post title -->
+                <!-- Card Narrower -->
+                <div class="card card-cascade narrower hoverable">
+                  <!-- Card content -->
+                  <a href="javascript:;">
+                    <div class="card-body card-body-cascade">
+                      <!-- Label -->
+                      <h6 class="green-text"><i class="fa fa-user"></i>
+                        <font class="black-text font-weight-bold"> {{reqDetail.Name}}</font>
+                      </h6>
+                      <!-- Title -->
+                      <h6 class="green-text"><i class="fa fa-map-marker"></i>
+                        <font class="black-text "> {{reqDetail.Address}}</font>
+                      </h6>
+                      <!-- Title -->
+                      <h6 class="green-text"><i class="fa fa-phone"></i>
+                        <font class="black-text "> {{reqDetail.Phone}}</font>
+                      </h6>
+                      <!-- Text -->
+                      <h6 class="green-text"><i class="fa fa-sticky-note"></i>
+                        <font class="black-text "> {{reqDetail.Note}}</font>
+                      </h6>
+
+                    </div>
+                  </a>
+                </div>
+                <!-- Card Narrower -->
+              </div>
+              <div class="col-md-6 ">
+                <h6 class="font-weight-bold mb-1 green-text"><i class="fas fa-car pr-2"></i>Info driver</h6>
+                <!-- Card Narrower -->
+                <div class="card card-cascade narrower hoverable">
+                  <!-- Card content -->
+                  <a href="javascript:;">
+                    <div
+                      class="card-body card-body-cascade"
+                      v-if="reqDetail.DriverUser !== null"
+                    >
+                      <!-- Label -->
+                      <h6 class="green-text"><i class="fa fa-user"></i>
+                        <font class="black-text font-weight-bold"> {{reqDetail.DriverName}} ({{reqDetail.DriverUser}})</font>
+                      </h6>
+                      <!-- Title -->
+                      <h6 class="green-text"><i class="fa fa-clock"></i>
+                        <font class="black-text ">Tiep nhan : {{reqDetail.TimeAccept}}</font>
+                      </h6>
+                      <!-- Title -->
+                      <h6 class="green-text"><i class="fa fa-clock"></i>
+                        <font class="black-text ">Hoan thanh: {{reqDetail.TimeDone}}</font>
+                      </h6>
+
+                    </div>
+                    <div
+                      class="card-body card-body-cascade"
+                      v-else
+                    >
+                      <h6 class="red-text"><i class="fa fa-clock"></i>
+                        <font class="black-text font-weight-bold"> Khong co du lieu</font>
+                      </h6>
+                    </div>
+                  </a>
+                </div>
+                <!-- Card Narrower -->
+              </div>
+            </div>
+            <div
+              class="row"
+            >
+              <div class="col-md-12">
+                <!-- <button @click="handleRequest">test 1</button>
+                <button @click="handleRequest2">test 2</button>
+                <button @click="createFakeMoving">test 3</button>
+                <button @click="startRouteAnimation">test 4</button> -->
+                <gmap-map
+                  ref="mapRef"
+                  :center="center"
+                  :zoom="12"
+                  style="width:100%;  height: 350px;"
+                >
+                  <gmap-marker
+                    ref="myMarker"
+                    v-bind:position="oldPosition"
+                    :draggable="true"
+                    :icon="{ url: require('../assets/automobile.png')}"
+                  ></gmap-marker>
+                </gmap-map>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
@@ -115,9 +444,27 @@ export default {
 	data() {
 		return {
 			listRequest: [],
+			listRequest0: [],
+			listRequest1: [],
+			listRequest2: [],
+			listRequest3: [],
+			listRequest4: [],
 			listDriver: [],
 			selectedIdRequest: -1,
 			selectedIdDriver: -1,
+
+			reqDetail: {
+				ID: null,
+				Name: null,
+				Address: null,
+				Phone: null,
+				Note: null,
+				Driver: null,
+				DriverName: null,
+				TimeAccept: null,
+				TimeDone: null,
+				DriverUser: null
+			},
 
 			directionsDisplay: null,
 
@@ -150,45 +497,62 @@ export default {
 		axios
 			.get('http://localhost:1234/Request')
 			.then(res => {
-				self.listRequest = res.data;
+				self.reloadRequest(res.data);
 			})
 			.catch(err => {
 				console.log(err);
 			});
-		axios
-			.get('http://localhost:1234/User2')
-			.then(res => {
-				self.listDriver = res.data;
-			})
-			.catch(err => {
-				console.log(err);
-			});
-
+		self.socket.emit('add-user', { username: self.$store.state.user.Id });
 		self.geolocate(); //create map
 
-		self.socket.on('load-new-request', data => {
+		self.socket.on('load-all-request', data => {
+			var self = this;
 			// load list request
 			console.log(data);
-			self.listRequest = data;
+			self.reloadRequest(data);
 		});
 
-		self.socket.on('load-all-driver', data => {
-			//load list driver
-			console.log(data);
-			self.listDriver = data;
-		});
-
-		self.socket.on('hi there', data => {
-			console.log(data);
-			alert('123');
+		self.socket.on('receive-detail-request', data => {
+			var self = this;
+			//console.log('reive here ');
+			//console.log(data);
+			self.reqDetail = data[0];
+			console.log(self.reqDetail);
+			console.log('reqDetail');
 		});
 	},
 
 	methods: {
+		reloadRequest(data) {
+			var self = this;
+			self.listRequest = data;
+			self.listRequest0 = self.listRequest.filter(c => c.Status == 0);
+			self.listRequest1 = self.listRequest.filter(c => c.Status == 1);
+			self.listRequest2 = self.listRequest.filter(c => c.Status == 2);
+			self.listRequest3 = self.listRequest.filter(c => c.Status == 3);
+			self.listRequest4 = self.listRequest.filter(c => c.Status == 4);
+		},
 		getRequest(id) {
 			var self = this;
 			self.selectedIdRequest = id;
 			console.log('request: ' + id);
+			var req = {
+				id: self.selectedIdRequest,
+				uid: self.$store.state.user.Id
+			};
+			self.socket.emit('get-detail-request', req);
+
+			// reqDetail={
+			// 	ID=null,
+			// 	Name=null,
+			// 	Address=null,
+			// 	Phone=null,
+			// 	Note=null,
+			// 	Driver=null,
+			// 	DriverName=null,
+			// 	TimeAccept=null
+			// },
+			$('#modalreq').modal('show');
 		},
 		getDriver(id) {
 			var self = this;
@@ -346,6 +710,30 @@ export default {
 }
 .dvif {
 	height: 6px;
+}
+.col-1-5 {
+	width: 20%;
+	float: left;
+	position: relative;
+	min-height: 1px;
+	padding-right: 5px;
+	padding-left: 5px;
+	height: 500px;
+	overflow-y: auto;
+}
+.fr {
+	float: right;
+}
+.mycl3-text {
+	color: #65ec46;
+}
+.card-body {
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+.modal-header {
+	padding: 0.5rem !important;
+	padding-right: 1rem !important;
 }
 /* h3 {
 	margin: 40px 0 0;

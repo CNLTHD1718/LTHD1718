@@ -49,13 +49,26 @@ router.post('/login', (req, res) => {
             console.log(user)
             AuthRepo.updateRefreshToken(user.Id, rfToken)
                 .then(() => {
-                    var user_res = {
-                        auth: true,
-                        user: {
+                    var udetail = {};
+                    if (user.Type == 4) {
+                        udetail = {
+                            Id: user.Id,
+                            Username: user.Username,
+                            Type: user.Type,
+                            Lat: user.Lat,
+                            Lng: user.Lng,
+                        }
+                    } else {
+                        udetail = {
                             Id: user.Id,
                             Username: user.Username,
                             Type: user.Type
-                        },
+                        }
+
+                    }
+                    var user_res = {
+                        auth: true,
+                        user: udetail,
                         access_token: acToken,
                         refresh_token: rfToken
                     };
@@ -77,7 +90,7 @@ router.post('/login', (req, res) => {
         }
     }).catch(err => {
         res.end('err login |' + err);
-        console.log('err login |' +err);
+        console.log('err login |' + err);
     })
 })
 

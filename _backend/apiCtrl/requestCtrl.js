@@ -16,6 +16,19 @@ router.get('/', (req, res) => {// get list request
         })
 })
 
+router.get('/req-unidentified', (req, res) => {// get list request
+    requestRepo.loadUnidentified()
+        .then(rows => {
+            res.json(rows);
+            console.log(rows);
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on server console');
+        })
+})
+
 router.get('/add', (req, res) => {//add using get
     var obj = {
         Name: req.query.Name,

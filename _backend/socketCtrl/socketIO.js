@@ -7,10 +7,26 @@ var requestRepo = new RequestRepo();
 
 
 var clients = {};
-
+var driversDecline = [];
+var count_public = 0;
+var req_detail = null;
 
 var eventGetAll = (io, client) => {
     requestRepo.loadAll()
+        .then(rows => {
+            io.sockets.emit('load-all-request', rows);
+        })
+        .catch(err => {
+            // io.sockets.emit('event-request-reciever',{
+            //     msg: 'error to get list request waiting',
+            //     err: err
+            // });
+            console.log('err load-new-request' + err);
+        })
+}
+
+var eventGetUnidentified = (io, client) => {
+    requestRepo.loadUnidentified()
         .then(rows => {
             io.sockets.emit('load-new-request', rows);
         })
@@ -88,7 +104,8 @@ var findNeareastDriver = (req_id) => {
                 if (req) {
                     console.log('find nearest driver for request');
                     console.log(req);
-                    userRepo.loadAll_Driver_Ready().then(drivers => {
+
+                    userRepo.loadAll_Driver_Ready(driversDecline).then(drivers => {
                         var min = null;
                         var driver = null;
                         if (drivers.length < 0) {
@@ -112,10 +129,10 @@ var findNeareastDriver = (req_id) => {
                             console.log('long : ' + long)
                         });
                         resolve(driver);
-                        console.log()
                         console.log('resolve ' + driver.Id + driver.Name);
 
                     }).catch(err => reject(err));
+
                 } else {
                     reject(new Error("req not found !"));
                     console.log("req not found !")
@@ -125,13 +142,49 @@ var findNeareastDriver = (req_id) => {
     });
 }
 
+var fn = (io, data_2) => {
+    findNeareastDriver(data_2.Id)
+        .then(driver => {
+            var datax = data_2;
+            if (driver) {
+                if (clients[driver.Id]) {
+                    console.log('data send to driver is ');
+                    console.log(datax);
+                    io.sockets.to(clients[driver.Id].socket).emit('driver-receive-new-request', datax)
+                }
+                else {
+                    console.log('DRIVER SOCKET LOGIN ERR ')
+                }
+            }
+            else {
+                count_public++;
+                console.log('COUNT TIME : ' + count_public)
+                if (count_public < config.NTimeFind) {
+                    setTimeout(function () {
+                        fn(io, req_detail);
+                    }, 3000);
+                }
+                else {
+                    console.log('FAIL => find user count time :' + (count_public - 1))
+                }
+            }
+        })
+        .catch(err => {
+            console.log('err socket id here ' + err);
+            reject(new Error('err socket id here ' + err));
+        })
+}
+
+
 module.exports.response = function (io, client) {
 
     client.on('add-user', function (data) {
         clients[data.username] = {
             "socket": client.id
         };
+        console.log('add new user to socket: ')
         console.log(clients);
+        //console.log(moment().format("DD/MM/YYYY hh:mm:ss a"));
         io.sockets.connected[clients[data.username].socket].emit("hi there 2", data);
         //client.emit('hi there 2',data);
     });
@@ -145,43 +198,52 @@ module.exports.response = function (io, client) {
         requestRepo.insert(data)
             .then(() => {
                 console.log('add-new-request success');
+                //console.log('client id : '+data.uid)
+                //console.log(clients[data.uid]);
+                if (clients[data.uid]) {
+                    io.sockets.to(clients[data.uid].socket).emit('res-add-new-request', { res: 'success' })
+                }
                 eventGetAll(io, client);
+                eventGetUnidentified(io, client);
             })
             .catch(err => {
-                console.log('err eventGetAll' + err);
+                console.log('err eventGetAll: ' + err);
             })
     });
 
     client.on('identify-location', function (data) {
+        driversDecline = [];
         console.log(data)
-        var datax;
+        count_public = 0;
         requestRepo.updateLocate(data)
             .then(() => {
                 console.log('identify-location success');
                 eventGetAll(io, client);
+                eventGetUnidentified(io, client)
                 return requestRepo.load(data.Id);
             })
             .then(data_2 => {
-                datax = data_2;
-                return findNeareastDriver(data_2.Id);
-            })
-            .then(driver => {
-                if (driver) {
-                    if (clients[driver.Id]) {
-                        console.log('data send to driver is ');
-                        console.log(datax);
-                        io.sockets.to(clients[driver.Id].socket).emit('driver-receive-new-request', datax)
-                    }
-                    else {
-                        console.log('socket cannot find driver online ')
-                    }
-                }
-                else {
-                    console.log('socket cannot find driver online ')
-                }
+                req_detail = data_2;
+                fn(io, data_2);
             })
             .catch(err => {
-                console.log('err socket id here ' + err);
+                console.log('err ' + err)
+            })
+    });
+
+    client.on('get-detail-request', function (data) {
+        console.log(data)
+        requestRepo.loadDetail(data.id)
+            .then(row => {
+                // console.log('get row');
+                // console.log(row)
+                if (clients[data.uid]) {
+                    io.sockets.to(clients[data.uid].socket).emit('receive-detail-request', row)
+                }
+                //eventGetAllDriver(io, client);
+            })
+            .catch(err => {
+                console.log('err eventGetAllDriver' + err);
             })
     });
 
@@ -234,7 +296,7 @@ module.exports.response = function (io, client) {
 
     //#region app4 active this event
     client.on('driver-change-location', function (data) {
-        console.log(data)
+        console.log('driver change location')
         userRepo.updateLocation(data)
             .then(() => {
                 console.log('driver-change-location success');
@@ -246,6 +308,7 @@ module.exports.response = function (io, client) {
     });
 
     client.on('driver-accept-request', function (data) {
+        count_public = 0;
         console.log(data);
         var req_obj = {
             Id: data.req_id,
@@ -254,8 +317,6 @@ module.exports.response = function (io, client) {
         if (data.u_id && data.req_id) {
             requestRepo.update(req_obj)
                 .then(() => {
-                    //console.log('driver-accept-request success');
-                    //eventGetAll(io, client);
                     console.log('updated request status to 2')
                     var driver_obj = {
                         Id: data.u_id,
@@ -264,6 +325,13 @@ module.exports.response = function (io, client) {
                     console.log(driver_obj);
                     return userRepo.updateStatus(driver_obj);
                 }).then(() => {
+                    var obj = {
+                        ReqID: data.req_id,
+                        DriID: data.u_id
+                    }
+                    return requestRepo.insertDetail(obj)
+                })
+                .then(() => {
                     console.log('updated driver status to 2')
                     eventGetAll(io, client);
                     eventGetAllDriver(io, client);
@@ -277,6 +345,20 @@ module.exports.response = function (io, client) {
             console.log('invalid driver-accept-request')
             console.log(data)
         }
+    });
+
+    client.on('driver-decline-request', function (data) {
+        driversDecline.push(data.u_id);
+        console.log('list driver decline');
+        console.log(driversDecline);
+        count_public++;
+        if (count_public < config.NTimeFind) {
+            console.log('count time is : ' + count_public);
+            setTimeout(function () {
+                fn(io, req_detail);
+            }, 3000);
+        }
+
     });
 
     client.on('driver-start-request', function (data) {
@@ -323,8 +405,6 @@ module.exports.response = function (io, client) {
         if (data.u_id && data.req_id) {
             requestRepo.update(req_obj)
                 .then(() => {
-                    //console.log('driver-accept-request success');
-                    //eventGetAll(io, client);
                     console.log('updated request status to 4')
                     var driver_obj = {
                         Id: data.u_id,
@@ -332,7 +412,15 @@ module.exports.response = function (io, client) {
                     }//3 : driver is ready for new request
                     console.log(driver_obj);
                     return userRepo.updateStatus(driver_obj);
-                }).then(() => {
+                })
+                .then(() => {
+                    var obj = {
+                        ReqID: data.req_id,
+                        DriID: data.u_id
+                    }
+                    return requestRepo.updateDetail(obj)
+                })
+                .then(() => {
                     console.log('updated driver status to 1')
                     eventGetAll(io, client);
                     eventGetAllDriver(io, client);
@@ -347,6 +435,5 @@ module.exports.response = function (io, client) {
         }
     });
     //#endregion
-
 
 }

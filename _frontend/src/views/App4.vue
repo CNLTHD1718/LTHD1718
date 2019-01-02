@@ -3,30 +3,48 @@
     class="col s4"
     style="margin:0 auto;"
   >
+    <div class="row d-flex justify-content-center">
+      <button
+        id="btnOn"
+        class="btn waves-effect waves-light cyan pulse green"
+        type="button"
+        name="action"
+        @click="changeStatus(1)"
+      ><i
+          class="fa fa-power-off"
+          aria-hidden="true"
+        ></i>
+        OFFLINE
+      </button>
 
-    <button
-      id="btnOn"
-      class="btn waves-effect waves-light cyan pulse green"
-      type="button"
-      name="action"
-      @click="changeStatus(1)"
-    ><i
-        class="fa fa-power-off"
-        aria-hidden="true"
-      ></i>
-      OFFLINE
-    </button>
+      <button
+        id="btnOff"
+        class="btn waves-effect waves-light pulse green"
+        type="button"
+        name="action"
+        style="opacity: .4;display:none"
+        @click="changeStatus(0)"
+      >READY
+      </button>
 
-    <button
-      id="btnOff"
-      class="btn waves-effect waves-light pulse green"
-      type="button"
-      name="action"
-      style="opacity: .4;display:none"
-      @click="changeStatus(0)"
-    >READY
-    </button>
-
+      <button
+        id="btnChangePlace"
+        class="btn btn-primary"
+        type="button"
+        name="action"
+        @click="changePlace"
+      >Change Position
+      </button>
+      <button
+        id="btnSave"
+        class="btn btn-primary"
+        type="button"
+        name="action"
+        style="display:none"
+        @click="savechange"
+      >OK
+      </button>
+    </div>
     <gmap-map
       ref="mapRef"
       :center="center"
@@ -120,11 +138,11 @@
       <button
         id='btnEnd'
         @click="doneRequest"
-        class="btn waves-effect waves-light red "
+        class="btn waves-effect waves-light green"
         type="button"
-        style="height: 50px;width: 100%;"
+        style="height: 50px;width: 100%;display:none"
       >
-        End</button>
+        Done</button>
     </div>
   </div>
 
@@ -142,12 +160,17 @@ export default {
 		return {
 			isOnline: false,
 			timeOut: null,
-
+			isDismiss: 0,
+			isChangePosition: 0,
 			directionsDisplay: null,
-			center: { lat: 10.77191, lng: 106.65358 },
+			//center: { lat: 10.77191, lng: 106.65358 },
+			center: { lat: null, lng: null },
+			tempPosition: null,
 			markers: [],
+			circle: null,
 			places: [],
-			coordinates: { lat: 10.77191, lng: 106.65358 },
+			// coordinates: { lat: 10.77191, lng: 106.65358 },
+			coordinates: { lat: null, lng: null },
 			currentPlace: null,
 			fillColor1: '#0000FF',
 
@@ -165,7 +188,7 @@ export default {
 
 		$AB(document).ready(function() {
 			$('#modalreq').on('hidden.bs.modal', function() {
-				self.declineRequest();
+				if (self.isDismiss == 1) self.declineRequest();
 			});
 		});
 		// if (localStorage.token_key && localStorage.ref_token && localStorage.uid) {
@@ -207,7 +230,7 @@ export default {
 				//map.panTo({ lat: 1.38, lng: 103.8 });
 				self.directionsDisplay = new google.maps.DirectionsRenderer();
 				console.log('success set self.directionsDisplay');
-				var circle = new google.maps.Circle({
+				self.circle = new google.maps.Circle({
 					center: self.center,
 					radius: 100,
 					fillColor: '#0000FF',
@@ -259,11 +282,44 @@ export default {
 	},
 
 	methods: {
+		changePlace() {
+			var self = this;
+			$('#btnSave').show();
+			$('#btnChangePlace').hide();
+			self.isChangePosition = 1;
+			self.tempPosition = self.center;
+		},
+		changePosition(location) {
+			var self = this;
+			self.tempPosition = {
+				lat: location.latLng.lat(),
+				lng: location.latLng.lng()
+			};
+		},
+		savechange() {
+			var self = this;
+			self.isChangePosition = 0;
+			self.coordinates = self.tempPosition;
+			self.center = self.tempPosition;
+			var marker = self.$refs.myMarker.$markerObject;
+			marker.setPosition(self.center);
+			self.circle.setCenter(self.center);
+
+			var newReq = {
+				Id: self.$store.state.user.Id,
+				Lat: self.coordinates.lat,
+				Lng: self.coordinates.lng
+			};
+			self.socket.emit('driver-change-location', newReq);
+			$('#btnSave').hide();
+			$('#btnChangePlace').show();
+		},
 		openmodal() {
 			$('#modalreq').modal('show');
-		},		
+		},
 		acceptRequest() {
 			var self = this;
+			self.isDismiss = 0;
 			$('#modalreq').modal('hide');
 			clearTimeout(self.timeOut);
 			console.log('driver accept request');
@@ -271,28 +327,44 @@ export default {
 			self.socket.emit('driver-accept-request', self.req_for_driver);
 			self.showDirectionFromDriverToCustomer();
 			$('#modelProcess').fadeIn();
+
+			toastr.remove();
+			toastr.clear();
+			toastr.success('Accept request success', { timeOut: 500 });
 		},
 		declineRequest() {
 			var self = this;
+			self.isDismiss = 0;
 			$('#modalreq').modal('hide');
 			clearTimeout(self.timeOut);
-			alert('driver decline request');
+			self.socket.emit('driver-decline-request', self.req_for_driver);
+
+			toastr.remove();
+			toastr.clear();
+			toastr.error('You decline request', { timeOut: 500 });
 		},
 		startRequest() {
 			var self = this;
 			self.socket.emit('driver-start-request', self.req_for_driver);
-			document.getElementById('btnEnd').disabled = false;
+
+			$('#btnStart').hide();
+			$('#btnEnd').show();
 		},
 		doneRequest() {
 			var self = this;
 			self.socket.emit('driver-done-request', self.req_for_driver);
 			self.updateDriverLocationAfterDone();
 			self.directionsDisplay.setMap(null); //delete previous direction
-			alert('done');
+
+			toastr.success('Done request', { timeOut: 3000 });
 			$('#modelProcess').fadeOut();
+
+			$('#btnStart').show();
+			$('#btnEnd').hide();
 		},
 		showNewRequest() {
 			var self = this;
+			self.isDismiss = 1;
 			$('#modalreq').modal('show');
 			self.timeOut = setTimeout(function() {
 				self.declineRequest();
@@ -394,7 +466,13 @@ export default {
 		},
 
 		updateCoordinates(location) {
+			toastr.remove();
+			toastr.clear();
 			var self = this;
+			if (self.isChangePosition == 1) {
+				self.changePosition(location);
+				return;
+			}
 			var center_coordinates = {
 				latitude: self.center.lat,
 				longitude: self.center.lng
@@ -403,10 +481,7 @@ export default {
 				latitude: location.latLng.lat(),
 				longitude: location.latLng.lng()
 			};
-			M.toast({
-				html: 'Changed location success',
-				classes: 'light-blue accent-3'
-			});
+
 			//console.log(haversine(center_coordinates, new_coordinates, { unit: 'meter' }));
 			//console.log(haversine(center_coordinates, new_coordinates, {threshold: 100,unit: 'meter'}));
 			//console.log('1center ' +center_coordinates.latitude +',' + center_coordinates.longitude );
@@ -423,9 +498,9 @@ export default {
 					lat: location.latLng.lat(),
 					lng: location.latLng.lng()
 				};
-				//alert('Success');
+				toastr.success('Changed location success', { timeOut: 500 });
 				console.log('change location success');
-				var driver = JSON.parse(localStorage.getItem('UserObj'));
+				var driver = self.$store.state.user;
 				var newReq = {
 					Id: driver.Id,
 					Lat: self.coordinates.lat,
@@ -433,7 +508,7 @@ export default {
 				};
 				self.socket.emit('driver-change-location', newReq);
 			} else {
-				alert('Error : maximum is 100m !!');
+				toastr.error('Error : maximum is 100m !');
 				self.coordinates = self.center;
 				var marker = self.$refs.myMarker.$markerObject;
 				marker.setPosition(self.center);
@@ -457,8 +532,33 @@ export default {
 		},
 
 		geolocate() {
+			var self = this;
 			return new Promise((resolve, reject) => {
-				navigator.geolocation.getCurrentPosition(position => {});
+				navigator.geolocation.getCurrentPosition(position => {
+					if (
+						self.$store.state.user.Lat == null ||
+						self.$store.state.user.Lat == ''
+					) {
+						self.center = {
+							lat: position.coords.latitude,
+							lng: position.coords.longitude
+						};
+						self.coordinates = self.center;
+						var newReq = {
+							Id: self.$store.state.user.Id,
+							Lat: self.coordinates.lat,
+							Lng: self.coordinates.lng
+						};
+						console.log('Location default');
+						setTimeout(function() {
+							self.socket.emit('driver-change-location', newReq);
+						}, 2000);
+					} else {
+						console.log('lat not null');
+						console.log(self.$store.state.user.Lat)
+					}
+					//console.log(position);
+				});
 				resolve();
 			});
 		}
