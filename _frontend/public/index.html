@@ -15,9 +15,95 @@
   <!-- Your custom styles (optional) -->
   <link href="<%= BASE_URL %>layout/css/style.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
+
+  <style>
+    .intro-2 {
+      /* background: url("https://mdbootstrap.com/img/Photos/Others/img (40).jpg")no-repeat center center; */
+      background: url("https://www.grab.com/vn/wp-content/uploads/sites/11/2016/08/bike_banner.jpg") no-repeat center center;
+      background-size: cover;
+    }
+
+    .navbar {
+      background-color: transparent;
+    }
+
+    .top-nav-collapse {
+      background-color: #4285F4;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .navbar {
+        background-color: #4285F4;
+      }
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    .full-height {
+      height: 100%;
+    }
+
+    .cus-scrollbar {
+      background-color: #F5F5F5;
+      float: left;
+      overflow-y: auto;
+    }
+
+    .style-1::-webkit-scrollbar {
+      width: 6px;
+      background-color: #F5F5F5;
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+    }
+
+    .style-1::-webkit-scrollbar-thumb {
+      background-color: #b5b8bc;
+      ;
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+    }
+
+    .style-1::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      background-color: #F5F5F5;
+      -webkit-border-radius: 10px;
+      border-radius: 10px;
+    }
+  </style>
+  <style type="text/css">
+    /* Chart.js */
+    @-webkit-keyframes chartjs-render-animation {
+      from {
+        opacity: 0.99
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    @keyframes chartjs-render-animation {
+      from {
+        opacity: 0.99
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    .chartjs-render-monitor {
+      -webkit-animation: chartjs-render-animation 0.001s;
+      animation: chartjs-render-animation 0.001s;
+    }
+  </style>
 </head>
 
-<body>
+<body aria-busy="true">
   <noscript>
     <strong>We're sorry but hello-world doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
   </noscript>
@@ -48,6 +134,7 @@
     opacity: 1 !important;
     margin-top: 100px;
   }
+
   #toast-container {
     margin-top: 55px;
   }
@@ -55,7 +142,7 @@
 
 <script>
   $(document).ready(function () {
-   
+
   });
 
 

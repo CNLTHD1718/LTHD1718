@@ -1,8 +1,14 @@
 <template>
-	<div>
-		<NavBar />
+  <!--Main Navigation-->
+  <header>
+<NavBar />
 		<router-view />
-	</div>
+	
+
+
+
+</header>
+<!--Main Navigation-->
 </template>
 
 <script>

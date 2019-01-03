@@ -1,6 +1,15 @@
 <template>
-  <div class="bg">
-    <div class="row d-flex justify-content-center">
+	<div class="view intro-2" style="">
+		<div class="full-bg-img">
+			<div class="mask rgba-purple-light flex-center">
+				<div class="container text-center white-text wow fadeInUp animated" style="visibility: visible; animation-name: fadeInUp;">
+					<h2>This Navbar is fixed and transparent</h2>
+					<br>
+					<h5>It will always stay visible on the top, even when you scroll down</h5>
+					<p>Navbar's background will switch from transparent to solid color while scrolling down</p>
+					<br>
+					<p>Full page intro with background image will be always displayed in full screen mode, regardless of device </p>
+				<div class="row d-flex justify-content-center">
       <div class="col-4">
 
         <!-- Card -->
@@ -46,8 +55,10 @@
         </div>
       </div>
     </div>
-
-  </div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -60,23 +71,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/* .card-body {
-	padding: 0.1rem !important;
-} */
-html {
-	height: 100% !important;
-	margin: 0;
-}
 
-.bg {
-	/* The image used */
-	background-image: url(https://www.grab.com/vn/wp-content/uploads/sites/11/2016/08/bike_banner.jpg);
-	/* Full height */
-	height: 50%;
 
-	/* Center and scale the image nicely */
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
 </style>

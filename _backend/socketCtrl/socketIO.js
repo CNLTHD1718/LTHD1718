@@ -327,7 +327,11 @@ module.exports.response = function (io, client) {
                 }).then(() => {
                     var obj = {
                         ReqID: data.req_id,
-                        DriID: data.u_id
+                        DriID: data.u_id,
+                        RLat:data.rlat,
+                        RLng:data.rlng,
+                        DLat:data.dlat,
+                        DLng:data.dlng,
                     }
                     return requestRepo.insertDetail(obj)
                 })

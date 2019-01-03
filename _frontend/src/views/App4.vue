@@ -3,18 +3,19 @@
     class="col s4"
     style="margin:0 auto;"
   >
-    <div class="row d-flex justify-content-center">
+    <div id="dStatus" class="row d-flex justify-content-center cus-scrollbar style-1">
       <button
         id="btnOn"
         class="btn waves-effect waves-light btn-success"
         type="button"
         name="action"
+		style="width:45%"
         @click="changeStatus(1)"
       ><i
           class="fa fa-power-off"
           aria-hidden="true"
         ></i>
-        Nhận khách
+        Bắt Đầu Nhận khách
       </button>
 
       <button
@@ -22,7 +23,7 @@
         class="btn waves-effect waves-light pulse btn-success"
         type="button"
         name="action"
-        style="opacity: .4;display:none"
+        style="opacity: .4;display:none;width:45%"
         @click="changeStatus(0)"
       >Đang chờ khách...
       </button>
@@ -32,6 +33,7 @@
         class="btn btn-primary"
         type="button"
         name="action"
+		style="width:45%"
         @click="changePlace"
       >Thay đổi vị trí
       </button>
@@ -40,7 +42,7 @@
         class="btn btn-primary"
         type="button"
         name="action"
-        style="display:none"
+        style="display:none;width:45%"
         @click="savechange"
       >Xác nhận thay đổi
       </button>
@@ -267,7 +269,11 @@ export default {
 			};
 			self.req_for_driver = {
 				u_id: self.$store.state.user.Id,
-				req_id: data.Id
+				req_id: data.Id,
+				dlat:self.coordinates.lat,
+				dlng:self.coordinates.lng,
+				rlat:self.customer_LatLng.lat,
+				rlng:self.customer_LatLng.lng
 			};
 			self.showNewRequest();
 			console.log('driver-receive-new-request from server ' + data);
@@ -323,6 +329,8 @@ export default {
 			self.socket.emit('driver-accept-request', self.req_for_driver);
 			self.showDirectionFromDriverToCustomer();
 			$('#modelProcess').fadeIn();
+			$('#dStatus').hide();
+			$('#dStatus').removeClass('d-flex');
 
 			toastr.remove();
 			toastr.clear();
@@ -354,9 +362,11 @@ export default {
 
 			toastr.success('Bạn đã hoàn thành chuyến.', { timeOut: 3000 });
 			$('#modelProcess').fadeOut();
+			$('#dStatus').fadeIn();
+			$('#dStatus').addClass('d-flex');
 
-			$('#btnStart').show();
-			$('#btnEnd').hide();
+			$('#btnStart').fadeIn();
+			$('#btnEnd').fadeOut();
 		},
 		showNewRequest() {
 			var self = this;

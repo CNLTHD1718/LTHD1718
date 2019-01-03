@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <div class="container">
+    <div class="container ">
       <div class="row d-flex justify-content-center">
         <div class="col-md-6">
           <!-- Card -->
@@ -62,7 +61,6 @@
         </div>
       </div>
     </div>
-  </div>
 
 </template>
 <script>

@@ -1,7 +1,7 @@
 <template>
   <div
-    class="container-fluid"
-    style="    background-color: #f2f2f2;"
+    class="container-fluid fadeInDown animated "
+    style="background-color: #f2f2f2"
   >
     <div class="row">
       <div class="col-md-3">
@@ -28,12 +28,12 @@
     </div>
     <div class="row">
       <div
-        class="col-md-3"
+        class="col-md-3  cus-scrollbar style-1"
         style="height: 500px; overflow-y: auto;"
       >
 
         <div
-          class="list-group hoverable"
+          class="mt-3 list-group hoverable style-1  " style="height: 130px;overflow-y: auto;overflow-x: hidden"
           v-for="c in list"
           :key="c.Id"
           href="javascript:;"
@@ -44,7 +44,7 @@
           <a
             target="_blank"
             href="javascript:;"
-            class="card  mb-1  list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+            class="card  list-group-item list-group-item-action d-flex justify-content-between align-items-center"
           >
             <div>
               <p class="green-text mb-0"><i class="fa fa-user"></i>
@@ -78,7 +78,7 @@
           <gmap-map
             :center="center"
             :zoom="12"
-            style="width:100%;  height: 400px;"
+            style="width:100%;  height: 100%;"
             ref="mapRef"
           >
             <gmap-marker
@@ -222,7 +222,7 @@ export default {
 </script>
 
 
-    
+
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card {

@@ -16,69 +16,68 @@
 
               <!-- Material form register -->
               <form>
-                <p class="h4 text-center py-4">Thông Tin Khách Hàng</p>
+                <p class="h4 text-center py-3">Thông Tin Khách Hàng</p>
 
                 <!-- Material input text -->
                 <div class="md-form">
-                  <i class="fa fa-user prefix grey-text"></i>
+                  <i class="fa fa-user prefix black-text"></i>
                   <input
                     type="text"
                     id="txtName"
-                    class="form-control"
+                    class="form-control black-text"
                   >
                   <label
                     for="txtName"
-                    class="font-weight-light"
-                  >Name</label>
+                    class="font-weight-light black-text"
+                  >Tên</label>
                 </div>
 
                 <!-- Material input email -->
                 <div class="md-form">
-                  <i class="fa fa-envelope prefix grey-text"></i>
+                  <i class="fa fa-envelope prefix black-text"></i>
                   <input
                     type="email"
                     id="txtPhone"
-                    class="form-control"
+                    class="form-control black-text"
                   >
                   <label
                     for="txtPhone"
-                    class="font-weight-light"
-                  >Phone</label>
+                    class="font-weight-light black-text"
+                  >Điện thoại</label>
                 </div>
 
                 <!-- Material input email -->
                 <div class="md-form">
-                  <i class="fa fa-exclamation-triangle prefix grey-text"></i>
+                  <i class="fa fa-exclamation-triangle prefix black-text"></i>
                   <input
                     type="email"
                     id="txtAddress"
-                    class="form-control"
+                    class="form-control black-text"
                   >
                   <label
                     for="txtAddress"
-                    class="font-weight-light"
-                  >Address</label>
+                    class="font-weight-light black-text"
+                  >Địa chỉ</label>
                 </div>
 
                 <!--Textarea with icon prefix-->
                 <div class="md-form amber-textarea active-amber-textarea-2">
-                  <i class="fas fa-pencil-alt prefix"></i>
+                  <i class="fas fa-pencil-alt prefix black-text"></i>
                   <textarea
                     type="text"
                     id="txtNote"
-                    class="md-textarea form-control"
+                    class="md-textarea form-control black-text"
                     rows="3"
                   ></textarea>
-                  <label for="txtNote">Note</label>
+                  <label for="txtNote" class="black-text">Ghi chú</label>
                 </div>
 
                 <div class="text-center py-4 mt-3">
                   <button
-                    class="btn btn-green accent-4"
+                    class="btn btn-success"
                     type="button"
-                    style="background:#00B23E;"
                     @click='AddRequestSocket'
-                  >ADD</button>
+                  >Tiếp nhận</button>
                 </div>
               </form>
               <!-- Material form register -->
@@ -120,8 +119,8 @@ export default {
 			clearTimeout(self.timeOut);
 			if (data.res == 'success') {
 				self.clearImput();
-				toastr.success('Add Success', { timeOut: 3000 });
-			} else toastr.error('Add Err', { timeOut: 3000 });
+				toastr.success('Tiếp nhận thông tin thành công', { timeOut: 3000 });
+			} else toastr.error('Tiếp nhận thông tin thất bại', { timeOut: 3000 });
 		});
 	},
 	methods: {
@@ -141,7 +140,7 @@ export default {
 			}, 10000);
 		},
 		NotRespone() {
-			toastr.error('Not responding from server', { timeOut: 3000 });
+			toastr.error('Máy chủ không phản hồi', { timeOut: 3000 });
 		},
 		clearImput() {
 			$('#txtName').val('');

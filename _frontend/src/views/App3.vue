@@ -1,5 +1,8 @@
 <template>
-  <div class="container-fluid">
+  <div
+    class="container-fluid fadeInDown animated "
+    style="background-color: #f2f2f2;"
+  >
     <div
       class="row d-flex justify-content-center"
       style="background-color: #f2f2f2;"
@@ -7,7 +10,7 @@
       <h3 class="font-weight-bold green-text">Danh sách yêu cầu</h3>
     </div>
     <div class="row">
-      <div class="col-1-5">
+      <div class="col-1-5 cus-scrollbar style-1">
         <h4>
           <span class="badge badge-danger">Chưa Định Vị </span>
           <span class="badge badge-danger fr"> {{listRequest0.length}}</span>
@@ -22,13 +25,13 @@
         >
 
           <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable">
+          <div class="card card-cascade narrower hoverable style-1" style="height: 130px;overflow-y: auto;">
             <!-- Card content -->
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
                 <!-- Label -->
                 <h6 class="green-text"><i class="fa fa-calendar"></i>
-                  <font class="black-text font-weight-bold"> DateCreate</font>
+                  <font class="black-text font-weight-bold"> {{c.DateCreate}}</font>
                 </h6>
                 <h6 class="green-text"><i class="fa fa-user"></i>
                   <font class="black-text font-weight-bold"> {{c.Name}}</font>
@@ -49,7 +52,7 @@
         </div>
 
       </div>
-      <div class="col-1-5">
+      <div class="col-1-5 cus-scrollbar style-1">
         <h4><span class="badge badge-primary">Đã Định Vị</span>
           <span class="badge badge-primary fr"> {{listRequest1.length}}</span></h4>
         <div
@@ -62,10 +65,13 @@
         >
 
           <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable">
+          <div class="card card-cascade narrower hoverable style-1" style="height: 130px;overflow-y: auto;">
             <!-- Card content -->
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
+                <h6 class="green-text"><i class="fa fa-calendar"></i>
+                  <font class="black-text font-weight-bold"> {{c.DateCreate}}</font>
+                </h6>
                 <!-- Label -->
                 <h6 class="green-text"><i class="fa fa-user"></i>
                   <font class="black-text font-weight-bold"> {{c.Name}}</font>
@@ -86,7 +92,7 @@
 
         </div>
       </div>
-      <div class="col-1-5">
+      <div class="col-1-5 cus-scrollbar style-1">
         <h4><span class="badge badge-success">Đã Có Xe Nhận</span>
           <span class="badge badge-success fr"> {{listRequest2.length}}</span></h4>
         <div
@@ -99,10 +105,13 @@
         >
 
           <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable">
+          <div class="card card-cascade narrower hoverable style-1" style="height: 130px;overflow-y: auto;">
             <!-- Card content -->
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
+                <h6 class="green-text"><i class="fa fa-calendar"></i>
+                  <font class="black-text font-weight-bold"> {{c.DateCreate}}</font>
+                </h6>
                 <!-- Label -->
                 <h6 class="green-text"><i class="fa fa-user"></i>
                   <font class="black-text font-weight-bold"> {{c.Name}}</font>
@@ -123,7 +132,7 @@
 
         </div>
       </div>
-      <div class="col-1-5">
+      <div class="col-1-5 cus-scrollbar style-1">
         <h4><span class="badge badge-warning">Đang Di Chuyển</span>
           <span class="badge badge-warning fr"> {{listRequest3.length}}</span></h4>
         <div
@@ -136,10 +145,13 @@
         >
 
           <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable">
+          <div class="card card-cascade narrower hoverable style-1" style="height: 130px;overflow-y: auto;">
             <!-- Card content -->
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
+                <h6 class="green-text"><i class="fa fa-calendar"></i>
+                  <font class="black-text font-weight-bold"> {{c.DateCreate}}</font>
+                </h6>
                 <!-- Label -->
                 <h6 class="green-text"><i class="fa fa-user"></i>
                   <font class="black-text font-weight-bold"> {{c.Name}}</font>
@@ -160,7 +172,7 @@
 
         </div>
       </div>
-      <div class="col-1-5">
+      <div class="col-1-5 cus-scrollbar style-1">
         <h4><span class="badge badge-light">Đã Hoàn Tất</span>
           <span class="badge badge-light fr"> {{listRequest4.length}}</span></h4>
         <div
@@ -170,13 +182,17 @@
           href="javascript:;"
           :class="{active: c.Id === selectedIdRequest}"
           @click="getRequest(c.Id)"
+          data-toggle="modal" data-target="#modalreq"
         >
 
           <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable">
+          <div class="card card-cascade narrower hoverable style-1" style="height: 130px;overflow-y: auto;">
             <!-- Card content -->
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
+                <h6 class="green-text"><i class="fa fa-calendar"></i>
+                  <font class="black-text font-weight-bold"> {{c.DateCreate}}</font>
+                </h6>
                 <!-- Label -->
                 <h6 class="green-text"><i class="fa fa-user"></i>
                   <font class="black-text font-weight-bold"> {{c.Name}}</font>
@@ -199,42 +215,24 @@
       </div>
     </div>
 
+
+
     <!-- Modal -->
-    <div
-      class="modal fade"
-      id="modalreq"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-      data-backdrop="false"
-    >
-      <div
-        class="modal-dialog modal-lg modal-notify modal-success"
-        role="document"
-      >
-        <div
-          class="modal-content"
-          style="height: 550px;	overflow-y: auto; overflow-x: hidden;"
-        >
-          <!--Header-->
-          <div class="modal-header">
-            <p class="heading lead font-weight-bold">Chi Tiết Yêu Cầu</p>
+    <div class="modal fade top" id="modalreq" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false" style="display: none; padding-right: 17px;">
+    <div class="row d-flex justify-content-center col-7 modal-dialog modal-full-height modal-top modal-notify modal-success" role="document">
+      <!--Content-->
+      <div class="modal-content col-10 px-0">
+        <!--Header-->
+        <div class="modal-header">
+          <p class="heading lead">Thông Tin Yêu Cầu</p>
 
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span
-                aria-hidden="true"
-                class="white-text"
-              >×</span>
-            </button>
-          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" class="white-text">×</span>
+          </button>
+        </div>
 
-          <div class="modal-body">
+        <!--Body-->
+         <div class="modal-body">
             <div
               class="row col-lg-12 "
               style="padding-bottom: 10px; !important"
@@ -245,7 +243,7 @@
 
                 <!-- Post title -->
                 <!-- Card Narrower -->
-                <div class="card card-cascade narrower hoverable">
+                <div class="card card-cascade narrower hoverable  style-1" style="height: 130px;overflow-y: auto;">
                   <!-- Card content -->
                   <a href="javascript:;">
                     <div class="card-body card-body-cascade">
@@ -274,7 +272,7 @@
               <div class="col-md-6 ">
                 <h6 class="font-weight-bold mb-1 green-text"><i class="fas fa-car pr-2"></i>Thông Tin Tài Xế</h6>
                 <!-- Card Narrower -->
-                <div class="card card-cascade narrower hoverable">
+                <div class="card card-cascade narrower style-1" style="height: 130px;overflow-y: auto;">
                   <!-- Card content -->
                   <a href="javascript:;">
                     <div
@@ -315,10 +313,10 @@
                 <button @click="createFakeMoving">test 3</button>
                 <button @click="startRouteAnimation">test 4</button> -->
                 <gmap-map
-                :center="center"
+                  :center="center"
                   ref="mapRef"
                   :zoom="12"
-                  style="width:100%;  height: 350px;"
+                  style="width:100%;  height: 320px;"
                 >
                   <!-- :center="center" -->
                   <gmap-marker
@@ -332,9 +330,12 @@
             </div>
           </div>
 
-        </div>
       </div>
+      <!--/.Content-->
     </div>
+  </div>
+    
+
   </div>
 </template>
 
@@ -371,8 +372,8 @@ export default {
 			coordinates: {},
 			socket: io('localhost:1234'),
 			marker: null,
-      i: 0,
-      
+			i: 0,
+
 			oldPosition: {
 				lat: 10.8267449758182,
 				lng: 106.688824563477
@@ -409,11 +410,44 @@ export default {
 		self.socket.on('receive-detail-request', data => {
 			var self = this;
 			self.reqDetail = data[0];
+			self.showdirect(self.reqDetail);
 			//console.log(self.reqDetail);
 		});
 	},
 
 	methods: {
+		showdirect(data) {
+			if (data.RLat) {
+				var self = this;
+				var driver = {
+					lat: data.DLat,
+					lng: data.DLng
+				};
+				var request = {
+					lat: data.RLat,
+					lng: data.RLng
+				};
+
+				self.directionsService = new google.maps.DirectionsService();
+				self.directionsDisplay.setMap(self.$refs.mapRef.$mapObject);
+
+				self.directionsService.route(
+					{
+						origin: driver,
+						destination: request,
+						travelMode: 'DRIVING'
+					},
+					function(response, status) {
+						if (status === 'OK') {
+							self.directionsDisplay.setDirections(response);
+							console.log('driving ok');
+						} else {
+							console.log('Directions request failed due to ' + status);
+						}
+					}
+				);
+			}
+		},
 		reloadRequest(data) {
 			var self = this;
 			self.listRequest = data;
@@ -603,7 +637,7 @@ export default {
 	color: #65ec46;
 }
 .card-body {
-	padding-top: 0 !important;
+	padding-top: 8 !important;
 	padding-bottom: 0 !important;
 }
 .modal-header {
