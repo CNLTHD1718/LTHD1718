@@ -11,7 +11,7 @@
 
               <!-- Material form register -->
               <form>
-                <p class="h4 text-center py-4">Sign in</p>
+                <p class="h4 text-center py-4">Đăng Nhập</p>
 
                 <!-- Material input text -->
                 <div class="md-form">
@@ -26,7 +26,7 @@
                   <label
                     for="materialFormCardNameEx"
                     class="font-weight-light"
-                  >Username</label>
+                  >Tài khoản</label>
                 </div>
 
                 <!-- Material input password -->
@@ -42,15 +42,15 @@
                   <label
                     for="materialFormCardPasswordEx"
                     class="font-weight-light"
-                  >Password</label>
+                  >Mật khẩu</label>
                 </div>
 
                 <div class="text-center py-4 mt-3">
                   <button
-                    class="btn btn-cyan"
+                    class="btn btn-success"
                     type="button"
-										@click="login"
-                  >Login</button>
+                    @click="login"
+                  >Đăng nhập</button>
                 </div>
               </form>
               <!-- Material form register -->
@@ -173,56 +173,15 @@ export default {
 							break;
 					}
 				})
-				// .then(() => self.$router.push('/'))
-				.catch(err => console.log(err));
-		},
-		login22() {
-			var self = this;
-
-			var objToPost = {
-				Username: document.getElementById('username').value,
-				Password: document.getElementById('password').value
-			};
-			axios
-				.post('http://localhost:1234/Auth/login', objToPost)
-				.then(res => {
-					localStorage.ref_token = res.data.refresh_token;
-					localStorage.access_token = res.data.access_token;
-					localStorage.role = res.data.user.Type;
-					localStorage.Id = res.data.user.Id;
-
-					localStorage.setItem('UserObj', JSON.stringify(res.data.user));
-					var retrievedObject = localStorage.getItem('UserObj');
-
-					console.log('retrievedObject: ', JSON.parse(retrievedObject));
-
-					switch (res.data.user.Type) {
-						case 1:
-							self.$router.push({ name: 'App1' });
-							break;
-						case 2:
-							self.$router.push({ name: 'App2' });
-							break;
-						case 3:
-							self.$router.push({ name: 'App3' });
-							break;
-						case 4:
-							self.$router.push({ name: 'App4' });
-							break;
-						default:
-							console.log(res.data.user.Type);
-							console.log('not found type');
-							break;
-					}
-					//alert('success login');
-				})
 				.catch(err => {
-					console.log('err login |' + err);
-					alert('login failed');
+					toastr.remove();
+					toastr.clear();
+					toastr.error('Tên đăng nhập hoặc mật khẩu không đúng.', {
+						timeOut: 3000
+					});
+					console.log(err);
 				});
-			return;
-			alert('login failed');
-		}
+		},
 	}
 };
 </script>

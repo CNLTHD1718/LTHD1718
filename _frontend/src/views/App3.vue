@@ -4,12 +4,12 @@
       class="row d-flex justify-content-center"
       style="background-color: #f2f2f2;"
     >
-      <h3 class="font-weight-bold green-text">List request</h3>
+      <h3 class="font-weight-bold green-text">Danh sách yêu cầu</h3>
     </div>
     <div class="row">
       <div class="col-1-5">
         <h4>
-          <span class="badge badge-danger">Chua dinh vi </span>
+          <span class="badge badge-danger">Chưa Định Vị </span>
           <span class="badge badge-danger fr"> {{listRequest0.length}}</span>
         </h4>
         <div
@@ -28,7 +28,7 @@
               <div class="card-body card-body-cascade">
                 <!-- Label -->
                 <h6 class="green-text"><i class="fa fa-calendar"></i>
-                  <font class="black-text font-weight-bold"> 01/01/2018 abcd</font>
+                  <font class="black-text font-weight-bold"> DateCreate</font>
                 </h6>
                 <h6 class="green-text"><i class="fa fa-user"></i>
                   <font class="black-text font-weight-bold"> {{c.Name}}</font>
@@ -50,7 +50,7 @@
 
       </div>
       <div class="col-1-5">
-        <h4><span class="badge badge-primary">Da dinh vi</span>
+        <h4><span class="badge badge-primary">Đã Định Vị</span>
           <span class="badge badge-primary fr"> {{listRequest1.length}}</span></h4>
         <div
           class="list-group"
@@ -87,7 +87,7 @@
         </div>
       </div>
       <div class="col-1-5">
-        <h4><span class="badge badge-success">Da co xe nhan</span>
+        <h4><span class="badge badge-success">Đã Có Xe Nhận</span>
           <span class="badge badge-success fr"> {{listRequest2.length}}</span></h4>
         <div
           class="list-group"
@@ -124,7 +124,7 @@
         </div>
       </div>
       <div class="col-1-5">
-        <h4><span class="badge badge-warning">Dang di chuyen</span>
+        <h4><span class="badge badge-warning">Đang Di Chuyển</span>
           <span class="badge badge-warning fr"> {{listRequest3.length}}</span></h4>
         <div
           class="list-group"
@@ -161,7 +161,7 @@
         </div>
       </div>
       <div class="col-1-5">
-        <h4><span class="badge badge-light">Da hoan tat</span>
+        <h4><span class="badge badge-light">Đã Hoàn Tất</span>
           <span class="badge badge-light fr"> {{listRequest4.length}}</span></h4>
         <div
           class="list-group"
@@ -198,106 +198,6 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-3">
-        <h5 class="pt-3"><strong style="color:#00BA51;">List request {{listRequest.length}}</strong></h5>
-      </div>
-      <div class="col-md-9">
-        Info driver
-      </div>
-    </div>
-    <div class="row">
-      <div
-        class="col-md-3"
-        style="height: 500px; overflow-y: scroll;"
-      >
-
-        <div
-          class="list-group"
-          v-for="c in listRequest"
-          :key="c.Id"
-          href="javascript:;"
-          :class="{active: c.Id === selectedIdRequest}"
-          @click="getRequest(c.Id)"
-        >
-
-          <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable">
-            <!-- Card content -->
-            <a href="javascript:;">
-              <div class="card-body card-body-cascade">
-                <!-- Label -->
-                <h6 class="green-text"><i class="fa fa-user"></i>
-                  <font class="black-text font-weight-bold"> {{c.Name}}</font>
-                </h6>
-                <!-- Title -->
-                <h6 class="green-text"><i class="fa fa-map-marker"></i>
-                  <font class="black-text "> {{c.Address}}</font>
-                </h6>
-                <!-- Text -->
-                <h6 class="green-text"><i class="fa fa-sticky-note"></i>
-                  <font class="black-text "> {{c.Note}}</font>
-                </h6>
-                <div
-                  class="dvif"
-                  v-if="c.Status==0"
-                >
-                  <h6 class="red-text"><i class="fa fa-location-arrow"></i>Chua dinh vi</h6><br />
-                </div>
-                <div
-                  class="dvif"
-                  v-if="c.Status==1"
-                >
-                  <h6 class="blue-text"><i class="fa fa-location-arrow"></i>Da dinh vi</h6><br />
-                </div>
-                <div
-                  class="dvif"
-                  v-if="c.Status==2"
-                >
-                  <h6 class="green-text"><i class="fa fa-location-arrow"></i>Da co xe nhan</h6><br />
-                </div>
-                <div
-                  class="dvif"
-                  v-if="c.Status==3"
-                >
-                  <h6 class="yellow-text"><i class="fa fa-location-arrow"></i>Dang di chuyen</h6><br />
-                  <h6 class="yellow-text">Tai xe</h6><br />
-                </div>
-                <div
-                  class="dvif"
-                  v-if="c.Status==4"
-                >
-                  <h6 class="grey-text"><i class="fa fa-location-arrow"></i>Da hoan thanh</h6>
-                </div>
-              </div>
-            </a>
-          </div>
-          <!-- Card Narrower -->
-
-        </div>
-
-      </div>
-
-      <!-- <div class="col-md-9">
-        <button @click="handleRequest">test 1</button>
-        <button @click="handleRequest2">test 2</button>
-        <button @click="createFakeMoving">test 3</button>
-        <button @click="startRouteAnimation">test 4</button>
-        <gmap-map
-          ref="mapRef"
-          :center="center"
-          :zoom="12"
-          style="width:100%;  height: 400px;"
-        >
-          <gmap-marker
-            ref="myMarker"
-            v-bind:position="oldPosition"
-            :draggable="true"
-            :icon="{ url: require('../assets/automobile.png')}"
-          ></gmap-marker>
-        </gmap-map>
-      </div> -->
-    </div>
 
     <!-- Modal -->
     <div
@@ -313,11 +213,13 @@
         class="modal-dialog modal-lg modal-notify modal-success"
         role="document"
       >
-        <div class="modal-content" 
-              style="height: 550px;	overflow-y: auto; overflow-x: hidden;">
+        <div
+          class="modal-content"
+          style="height: 550px;	overflow-y: auto; overflow-x: hidden;"
+        >
           <!--Header-->
           <div class="modal-header">
-            <p class="heading lead font-weight-bold">Request detail</p>
+            <p class="heading lead font-weight-bold">Chi Tiết Yêu Cầu</p>
 
             <button
               type="button"
@@ -333,10 +235,13 @@
           </div>
 
           <div class="modal-body">
-            <div class="row col-lg-12 " style="padding-bottom: 10px; !important">
+            <div
+              class="row col-lg-12 "
+              style="padding-bottom: 10px; !important"
+            >
               <!-- Category -->
               <div class="col-md-6 ">
-                <h6 class="font-weight-bold mb-1 green-text"><i class="fas fa-suitcase pr-2"></i>Info Request</h6>
+                <h6 class="font-weight-bold mb-1 green-text"><i class="fas fa-suitcase pr-2"></i>Thông Tin Yêu Cầu</h6>
 
                 <!-- Post title -->
                 <!-- Card Narrower -->
@@ -367,7 +272,7 @@
                 <!-- Card Narrower -->
               </div>
               <div class="col-md-6 ">
-                <h6 class="font-weight-bold mb-1 green-text"><i class="fas fa-car pr-2"></i>Info driver</h6>
+                <h6 class="font-weight-bold mb-1 green-text"><i class="fas fa-car pr-2"></i>Thông Tin Tài Xế</h6>
                 <!-- Card Narrower -->
                 <div class="card card-cascade narrower hoverable">
                   <!-- Card content -->
@@ -382,11 +287,11 @@
                       </h6>
                       <!-- Title -->
                       <h6 class="green-text"><i class="fa fa-clock"></i>
-                        <font class="black-text ">Tiep nhan : {{reqDetail.TimeAccept}}</font>
+                        <font class="black-text ">Tiếp hận : {{reqDetail.TimeAccept}}</font>
                       </h6>
                       <!-- Title -->
                       <h6 class="green-text"><i class="fa fa-clock"></i>
-                        <font class="black-text ">Hoan thanh: {{reqDetail.TimeDone}}</font>
+                        <font class="black-text ">Hoàn Thành: {{reqDetail.TimeDone}}</font>
                       </h6>
 
                     </div>
@@ -395,7 +300,7 @@
                       v-else
                     >
                       <h6 class="red-text"><i class="fa fa-clock"></i>
-                        <font class="black-text font-weight-bold"> Khong co du lieu</font>
+                        <font class="black-text font-weight-bold"> Không có dữ liệu</font>
                       </h6>
                     </div>
                   </a>
@@ -403,25 +308,24 @@
                 <!-- Card Narrower -->
               </div>
             </div>
-            <div
-              class="row"
-            >
+            <div class="row">
               <div class="col-md-12">
                 <!-- <button @click="handleRequest">test 1</button>
                 <button @click="handleRequest2">test 2</button>
                 <button @click="createFakeMoving">test 3</button>
                 <button @click="startRouteAnimation">test 4</button> -->
                 <gmap-map
+                :center="center"
                   ref="mapRef"
-                  :center="center"
                   :zoom="12"
                   style="width:100%;  height: 350px;"
                 >
+                  <!-- :center="center" -->
                   <gmap-marker
                     ref="myMarker"
                     v-bind:position="oldPosition"
                     :draggable="true"
-                    :icon="{ url: require('../assets/automobile.png')}"
+                    :icon="{ url: require('../assets/motobike.png')}"
                   ></gmap-marker>
                 </gmap-map>
               </div>
@@ -449,10 +353,7 @@ export default {
 			listRequest2: [],
 			listRequest3: [],
 			listRequest4: [],
-			listDriver: [],
 			selectedIdRequest: -1,
-			selectedIdDriver: -1,
-
 			reqDetail: {
 				ID: null,
 				Name: null,
@@ -465,19 +366,13 @@ export default {
 				TimeDone: null,
 				DriverUser: null
 			},
-
 			directionsDisplay: null,
-
 			center: { lat: 10.77191, lng: 106.65358 },
-			markers: [],
-			places: [],
 			coordinates: {},
-			currentPlace: null,
-
 			socket: io('localhost:1234'),
-
 			marker: null,
-			i: 0,
+      i: 0,
+      
 			oldPosition: {
 				lat: 10.8267449758182,
 				lng: 106.688824563477
@@ -507,18 +402,14 @@ export default {
 
 		self.socket.on('load-all-request', data => {
 			var self = this;
-			// load list request
-			console.log(data);
+			//console.log(data);
 			self.reloadRequest(data);
 		});
 
 		self.socket.on('receive-detail-request', data => {
 			var self = this;
-			//console.log('reive here ');
-			//console.log(data);
 			self.reqDetail = data[0];
-			console.log(self.reqDetail);
-			console.log('reqDetail');
+			//console.log(self.reqDetail);
 		});
 	},
 
@@ -535,29 +426,13 @@ export default {
 		getRequest(id) {
 			var self = this;
 			self.selectedIdRequest = id;
-			console.log('request: ' + id);
+			//console.log('request: ' + id);
 			var req = {
 				id: self.selectedIdRequest,
 				uid: self.$store.state.user.Id
 			};
 			self.socket.emit('get-detail-request', req);
-
-			// reqDetail={
-			// 	ID=null,
-			// 	Name=null,
-			// 	Address=null,
-			// 	Phone=null,
-			// 	Note=null,
-			// 	Driver=null,
-			// 	DriverName=null,
-			// 	TimeAccept=null
-			// },
 			$('#modalreq').modal('show');
-		},
-		getDriver(id) {
-			var self = this;
-			self.selectedIdDriver = id;
-			console.log('driver: ' + id);
 		},
 		handleRequest2() {
 			var self = this;
@@ -688,16 +563,16 @@ export default {
 		},
 		geolocate: function() {
 			var self = this;
-			navigator.geolocation.getCurrentPosition(position => {});
-			setTimeout(function() {
-				self.directionsDisplay = new google.maps.DirectionsRenderer();
-				self.marker = self.$refs.myMarker.$markerObject;
-				// self.marker = new google.maps.Marker({
-				// 	position: new google.maps.LatLng(50.8, 4.7),
-				// 	map: self.$refs.mapRef.$mapObject
-				// });
-				//console.log(self.marker);
-			}, 2000); // async this after create map
+			navigator.geolocation.getCurrentPosition(position => {
+				setTimeout(function() {
+					self.directionsDisplay = new google.maps.DirectionsRenderer();
+					self.marker = self.$refs.myMarker.$markerObject;
+					self.center = {
+						lat: position.coords.latitude,
+						lng: position.coords.longitude
+					};
+				}, 2000); // async this after create map
+			});
 		}
 	}
 };
@@ -735,19 +610,4 @@ export default {
 	padding: 0.5rem !important;
 	padding-right: 1rem !important;
 }
-/* h3 {
-	margin: 40px 0 0;
-}
-ul {
-	list-style-type: none;
-	padding: 0;
-}
-li {
-	display: inline-block;
-	margin: 0 10px;
-	width: 100%;
-}
-a {
-	color: #42b983;
-} */
 </style>

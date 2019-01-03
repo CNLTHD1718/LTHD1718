@@ -16,7 +16,7 @@
 
               <!-- Material form register -->
               <form>
-                <p class="h4 text-center py-4">App1</p>
+                <p class="h4 text-center py-4">Thông Tin Khách Hàng</p>
 
                 <!-- Material input text -->
                 <div class="md-form">

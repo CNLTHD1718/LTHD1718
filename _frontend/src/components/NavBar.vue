@@ -1,11 +1,11 @@
 <template>
   <div>
     <!--Navbar-->
-    <nav class="mb-1 navbar navbar-expand-lg navbar-dark  green accent-4-color">
+    <nav class="mb-1 navbar navbar-expand-lg navbar-dark  success-color">
       <router-link
         to="/"
         class="navbar-brand"
-      >Home</router-link>
+      ><b>Trang Chủ</b></router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -22,74 +22,105 @@
         id="navbarSupportedContent-3"
       >
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item active pl-10">
             <router-link
               to="/App1"
-              class="nav-link waves-effect waves-light"
-            >App1
-              <span class="sr-only">(current)</span>
+              class="nav-link waves-effect waves-light font-weight-bold"
+            >App1: Nhận Thông Tin Khách
             </router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active pl-10">
             <router-link
               to="/App2"
-              class="nav-link waves-effect waves-light"
-            >App2</router-link>
+              class="nav-link waves-effect waves-light font-weight-bold"
+            >App2: Xác Nhận Vị Trí Khách
+            </router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active pl-10">
             <router-link
               to="/App3"
-              class="nav-link waves-effect waves-light"
-            >App3</router-link>
+              class="nav-link waves-effect waves-light font-weight-bold"
+            >App3: Danh Sách Yêu Cầu
+            </router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active pl-10">
             <router-link
               to="/App4"
-              class="nav-link waves-effect waves-light"
-            >App4</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link
-              to="/Login"
-              class="nav-link waves-effect waves-light"
-            >Login</router-link>
+              class="nav-link waves-effect waves-light font-weight-bold"
+            >App4: Tài Xế
+            </router-link>
           </li>
 
         </ul>
         <ul class="navbar-nav ml-auto nav-flex-icons">
-
-          <li class="nav-item dropdown">
+          <li
+            class="nav-item active"
+            v-if="this.$store.getters.isLoggedIn"
+          >
             <a
-              class="nav-link dropdown-toggle waves-effect waves-light"
-              id="navbarDropdownMenuLink"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="true"
-            >
-              <i class="fa fa-user"></i>
+              class="nav-link waves-effect waves-light"
+              style="font-weight: 400;"
+              @click="logout"
+            >Đăng Xuất
             </a>
-            <div
-              class="dropdown-menu dropdown-menu-right dropdown-default"
-              aria-labelledby="navbarDropdownMenuLink"
-            >
-              <a
-                class="dropdown-item waves-effect waves-light"
-                href="#"
-              >Action</a>
-              <a
-                class="dropdown-item waves-effect waves-light"
-                href="#"
-              >Another action</a>
-              <a
-                class="dropdown-item waves-effect waves-light"
-                href="#"
-              >Something else here</a>
-            </div>
           </li>
+          <li
+            class="nav-item"
+            v-else
+          >
+            <router-link
+              to="/Login"
+              class="nav-link waves-effect waves-light font-weight-bold"
+              style="font-weight: 400;"
+            >Đăng Nhập</router-link>
+          </li>
+
         </ul>
       </div>
     </nav>
     <!--/.Navbar-->
   </div>
 </template>
+
+<script>
+import io from 'socket.io-client';
+export default {
+	data() {
+		return {
+			socket: io('localhost:1234')
+		};
+	},
+	methods: {
+		logout() {
+			var self = this;
+			if (self.$store.getters.appType == 4) {
+				var newReq = {
+					Id: self.$store.state.user.Id,
+					Status: 0
+				};
+				console.log('change status to 0');
+				self.socket.emit('driver-change-status', newReq);
+			}
+			self.$store
+				.dispatch('logout')
+				.then(() => {
+			    self.$router.push({ name: 'Login' });
+			  })
+				.catch(err => {
+					console.log('err ' + err);
+				});
+		}
+	}
+};
+</script>
+
+<style scoped>
+.pl-10 {
+	padding-left: 10px;
+}
+.font-weight-bold {
+	font-weight: 400 !important;
+}
+</style>
+
 

@@ -6,7 +6,7 @@
     <div class="row d-flex justify-content-center">
       <button
         id="btnOn"
-        class="btn waves-effect waves-light cyan pulse green"
+        class="btn waves-effect waves-light btn-success"
         type="button"
         name="action"
         @click="changeStatus(1)"
@@ -14,17 +14,17 @@
           class="fa fa-power-off"
           aria-hidden="true"
         ></i>
-        OFFLINE
+        Nhận khách
       </button>
 
       <button
         id="btnOff"
-        class="btn waves-effect waves-light pulse green"
+        class="btn waves-effect waves-light pulse btn-success"
         type="button"
         name="action"
         style="opacity: .4;display:none"
         @click="changeStatus(0)"
-      >READY
+      >Đang chờ khách...
       </button>
 
       <button
@@ -33,7 +33,7 @@
         type="button"
         name="action"
         @click="changePlace"
-      >Change Position
+      >Thay đổi vị trí
       </button>
       <button
         id="btnSave"
@@ -42,7 +42,7 @@
         name="action"
         style="display:none"
         @click="savechange"
-      >OK
+      >Xác nhận thay đổi
       </button>
     </div>
     <gmap-map
@@ -55,7 +55,7 @@
         ref="myMarker"
         v-bind:position="coordinates"
         :draggable="true"
-        :icon="{ url: require('../assets/automobile.png')}"
+        :icon="{ url: require('../assets/motobike.png')}"
         @dragend="updateCoordinates"
       ></gmap-marker>
     </gmap-map>
@@ -66,6 +66,7 @@
       class="btn btn-primary"
       data-toggle="modal"
       @click="openmodal"
+      style="display:none"
     >
       Launch demo modal
     </button>
@@ -90,15 +91,15 @@
               <!-- Category -->
               <a
                 href="#!"
-                class="indigo-text"
+                class="green-text"
               >
-                <h6 class="font-weight-bold mb-1"><i class="fas fa-suitcase pr-2"></i>New Request</h6>
+                <h6 class="font-weight-bold mb-1"><i class="fas fa-suitcase pr-2"></i>Nhận được yêu cầu mới</h6>
               </a>
               <!-- Post title -->
-              <h5 class="mb-2">Dia chi khach hang</h5>
-              <h5 class="mb-2">Cach 10km</h5>
-              <h5 class="mb-2">SDT</h5>
-              <h5 class="mb-2">Ghi chu</h5>
+              <h5 class="mb-2">Vị trí: </h5>
+              <h5 class="mb-2">Cách: 10km</h5>
+              <h5 class="mb-2">SĐT: </h5>
+              <h5 class="mb-2">Ghi chú</h5>
 
             </div>
             <!-- Grid column -->
@@ -112,12 +113,12 @@
                 type="button"
                 class="btn btn-success btnm"
                 @click="acceptRequest()"
-              >Accept</button>
+              >Chấp nhận</button>
               <button
                 type="button"
                 class="btn btn-red btnm"
                 @click="declineRequest()"
-              >Decline</button>
+              >Từ chối</button>
             </div>
           </div>
         </div>
@@ -134,7 +135,7 @@
         type="button"
         style="height: 50px;width: 100%;"
       >
-        Start</button>
+        Bắt đầu</button>
       <button
         id='btnEnd'
         @click="doneRequest"
@@ -142,7 +143,7 @@
         type="button"
         style="height: 50px;width: 100%;display:none"
       >
-        Done</button>
+        Đến nơi</button>
     </div>
   </div>
 
@@ -163,14 +164,10 @@ export default {
 			isDismiss: 0,
 			isChangePosition: 0,
 			directionsDisplay: null,
-			//center: { lat: 10.77191, lng: 106.65358 },
-			center: { lat: null, lng: null },
+			center: { lat: 10.77191, lng: 106.65358 },
 			tempPosition: null,
-			markers: [],
 			circle: null,
-			places: [],
-			// coordinates: { lat: 10.77191, lng: 106.65358 },
-			coordinates: { lat: null, lng: null },
+			coordinates: { lat: 10.77191, lng: 106.65358 },
 			currentPlace: null,
 			fillColor1: '#0000FF',
 
@@ -255,12 +252,8 @@ export default {
 				console.log('error ' + err);
 			});
 
-		self.socket.on('hi there 2', data => {
-			//respone from server socket
-			console.log('respone from server socket');
-		});
-
 		self.socket.emit('add-user', { username: self.$store.state.user.Id }); //register username to socket server
+
 		console.log('add user socket' + self.$store.state.user.Id);
 
 		self.socket.on('driver-receive-new-request', data => {
@@ -313,6 +306,9 @@ export default {
 			self.socket.emit('driver-change-location', newReq);
 			$('#btnSave').hide();
 			$('#btnChangePlace').show();
+			toastr.remove();
+			toastr.clear();
+			toastr.success('Thay đổi vị trí thành công', { timeOut: 500 });
 		},
 		openmodal() {
 			$('#modalreq').modal('show');
@@ -330,7 +326,7 @@ export default {
 
 			toastr.remove();
 			toastr.clear();
-			toastr.success('Accept request success', { timeOut: 500 });
+			toastr.success('Chấp nhận yêu cầu thành công', { timeOut: 500 });
 		},
 		declineRequest() {
 			var self = this;
@@ -341,7 +337,7 @@ export default {
 
 			toastr.remove();
 			toastr.clear();
-			toastr.error('You decline request', { timeOut: 500 });
+			toastr.warning('Bạn đã từ chối yêu cầu', { timeOut: 500 });
 		},
 		startRequest() {
 			var self = this;
@@ -356,7 +352,7 @@ export default {
 			self.updateDriverLocationAfterDone();
 			self.directionsDisplay.setMap(null); //delete previous direction
 
-			toastr.success('Done request', { timeOut: 3000 });
+			toastr.success('Bạn đã hoàn thành chuyến.', { timeOut: 3000 });
 			$('#modelProcess').fadeOut();
 
 			$('#btnStart').show();
@@ -368,12 +364,10 @@ export default {
 			$('#modalreq').modal('show');
 			self.timeOut = setTimeout(function() {
 				self.declineRequest();
-			}, 5000);
-		},
-		checc() {
-			alert('Your toast was');
+			}, 10000);
 		},
 		changeStatus(x) {
+			var self = this;
 			if (x == 0) {
 				$('#btnOff').hide();
 				$('#btnOn').show();
@@ -381,32 +375,11 @@ export default {
 				$('#btnOn').hide();
 				$('#btnOff').show();
 			}
-			var self = this;
-			if (self.isOnline) {
-				var newReq = {
-					Id: localStorage.uid,
-					Status: 1
-				};
-				self.socket.emit('driver-change-status', newReq);
-			} else {
-				var newReq = {
-					Id: localStorage.uid,
-					Status: 0
-				};
-				self.socket.emit('driver-change-status', newReq);
-			}
-		},
-		logout() {
-			var self = this;
-			localStorage.token_key = '';
-			localStorage.ref_token = '';
-			localStorage.uid = '';
 			var newReq = {
-				Id: 1,
-				Status: 0
+				Id: self.$store.state.user.Id,
+				Status: x
 			};
 			self.socket.emit('driver-change-status', newReq);
-			self.$router.push({ name: 'Login' });
 		},
 		loadData(token) {
 			var self = this;
@@ -456,13 +429,12 @@ export default {
 			var self = this;
 			self.center = self.customer_LatLng;
 			self.coordinates = self.customer_LatLng;
-		},
-
-		vieww() {
-			var self = this;
-			self.directionsDisplay.setMap(null);
-			console.log(this.coordinates);
-			console.log(this.center);
+			var newReq = {
+				Id: self.$store.state.user.Id,
+				Lat: self.customer_LatLng.lat,
+				Lng: self.customer_LatLng.lng
+			};
+			self.socket.emit('driver-change-location', newReq);
 		},
 
 		updateCoordinates(location) {
@@ -498,7 +470,7 @@ export default {
 					lat: location.latLng.lat(),
 					lng: location.latLng.lng()
 				};
-				toastr.success('Changed location success', { timeOut: 500 });
+				toastr.success('Cập nhật vị trí thành công.', { timeOut: 500 });
 				console.log('change location success');
 				var driver = self.$store.state.user;
 				var newReq = {
@@ -508,29 +480,12 @@ export default {
 				};
 				self.socket.emit('driver-change-location', newReq);
 			} else {
-				toastr.error('Error : maximum is 100m !');
+				toastr.error('Phạm vi thay đổi tối đa 100m');
 				self.coordinates = self.center;
 				var marker = self.$refs.myMarker.$markerObject;
 				marker.setPosition(self.center);
 			}
-			//console.log('4old ' + self.coordinates.lat + ',' + self.coordinates.lng);
 		},
-		testingtt() {
-			//alert('yes me')
-			const start = {
-				latitude: 30.849635,
-				longitude: -83.24559
-			};
-
-			const end = {
-				latitude: 27.950575,
-				longitude: -82.457178
-			};
-
-			console.log(haversine(start, end, { unit: 'meter' }));
-			console.log(haversine(start, end, { threshold: 100, unit: 'meter' }));
-		},
-
 		geolocate() {
 			var self = this;
 			return new Promise((resolve, reject) => {
@@ -555,7 +510,7 @@ export default {
 						}, 2000);
 					} else {
 						console.log('lat not null');
-						console.log(self.$store.state.user.Lat)
+						console.log(self.$store.state.user.Lat);
 					}
 					//console.log(position);
 				});
@@ -575,31 +530,4 @@ export default {
 	padding: 0px !important;
 	padding-top: 1rem !important;
 }
-/* .ddriver {
-	padding: 0 !important;
-}*/
-/* .nodpadd {
-	border-radius: 0px !important;
-	width: 50%;
-} */
-
-/* .btn, .btn-large, .btn-small, .btn-flat {
-    border: none;
-     border-radius: 0px !important; 
-     padding: 0 0 !important
-} */
-/* h3 {
-	margin: 40px 0 0;
-}
-ul {
-	list-style-type: none;
-	padding: 0;
-}
-li {
-	display: inline-block;
-	margin: 0 10px;
-}
-a {
-	color: #42b983;
-} */
 </style>

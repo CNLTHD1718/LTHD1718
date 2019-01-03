@@ -27,7 +27,7 @@ var router = new Router({
 			path: '/App2',
 			name: 'App2',
 			component: App2,
-			// meta: { requiresAuth: true }
+			meta: { requiresAuth: true }
 		},
 		{
 			path: '/App3',
@@ -67,9 +67,10 @@ router.beforeEach((to, from, next) => {
 		if (store.getters.isLoggedIn) {
 			if (apptype == to.path) {
 				next();
-			} else {
-				next('/Login');
-			}
+			} 
+			// else {
+			// 	next('/Login');
+			// }
 		} else {
 			next('/Login');
 		}

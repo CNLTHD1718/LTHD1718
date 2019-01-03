@@ -16,6 +16,8 @@ class RequestRepo {
              Note TEXT,
              Lat REAL,
              Lng REAL,
+             RLat REAL,
+             RLng REAL,
              Status INTERGER,
              DateCreate TEXT
          ) `;
@@ -44,8 +46,9 @@ class RequestRepo {
             [obj.Status, obj.Id]);
     }
     updateLocate(obj) {
-        return DbFunction.run(`UPDATE Request SET Status = ?, Lat = ?, Lng = ? WHERE Id = ?`,
-            [1, obj.Lat, obj.Lng, obj.Id]);
+        return DbFunction.run(`UPDATE Request SET Status = ?, Lat = ?, Lng = ?, RLat = ?,RLng = ? 
+        WHERE Id = ?`,
+            [1, obj.Lat, obj.Lng, obj.RLat, obj.RLng, obj.Id]);
     }
     delete(id) {
         return DbFunction.run(`UPDATE Request SET Status = ? WHERE id = ?`, [-1, id]);

@@ -5,7 +5,7 @@
   >
     <div class="row">
       <div class="col-md-3">
-        <h5 class="pt-3"><strong style="color:#00BA51;">List request {{list.length}}</strong></h5>
+        <h5 class="pt-3"><strong style="color:#00BA51;">Danh sách yêu cầu {{list.length}}</strong></h5>
       </div>
       <div class="col-md-9">
         <div
@@ -20,7 +20,7 @@
           ><i
               class="fas fa-cogs pr-2"
               aria-hidden="true"
-            ></i>Locate this
+            ></i>Xác nhận vị trí
           </button>
 
         </div>
@@ -108,16 +108,11 @@ export default {
 		return {
 			list: [],
 			selectedId: -1,
-
 			center: { lat: 10.77191, lng: 106.65358 },
-			markers: [],
-			places: [],
 			coordinates: null,
+			Rcoordinates: null,
 			currentPlace: null,
 			marker: null,
-			user: '',
-			message: '',
-			messages: [],
 			socket: io('localhost:1234')
 		};
 	},
@@ -135,13 +130,13 @@ export default {
 		self.geolocate(); // map
 
 		self.socket.on('load-new-request', data => {
-			console.log(data);
+			// console.log(data);
 			self.list = data;
 		});
-		
+
 		self.$refs.mapRef.$mapPromise.then(map => {
 			self.marker = self.$refs.myMarker.$markerObject;
-			console.log(self.marker);
+			// console.log(self.marker);
 		});
 	},
 
@@ -161,7 +156,6 @@ export default {
 						lat: latitude,
 						lng: longitude
 					};
-					//self.marker.setPosition(self.coordinates);
 					var marker2 = self.$refs.myMarker.$markerObject;
 					marker2.setPosition(self.coordinates);
 					self.center = self.coordinates;
@@ -171,13 +165,13 @@ export default {
 
 		updateCoordinates(location) {
 			var self = this;
-			self.coordinates = {
+			self.Rcoordinates = {
 				lat: location.latLng.lat(),
 				lng: location.latLng.lng()
 			};
 			toastr.remove();
 			toastr.clear();
-			toastr.success('Changed location success', {
+			toastr.success('Thay đổi vị trí thành công.', {
 				autoDismiss: true,
 				maxOpened: 1,
 				newestOnTop: true,
@@ -185,9 +179,6 @@ export default {
 				tapToDismiss: true,
 				timeOut: 1000
 			});
-			//toastr.clear()
-			//toastr.success('Changed location success', { timeOut: 3000 });
-			// toastr.success('Hello World', 'New Message', { timeOut: 9500 });
 		},
 
 		locatePlace() {
@@ -197,29 +188,30 @@ export default {
 			var self = this;
 
 			if (!self.coordinates) {
-				toastr.error('Located fail', { timeOut: 3000 });
+				toastr.error('Xác nhận vị trí thất bại.', { timeOut: 3000 });
 				return;
 			}
-
-			var objToPost = {
-				Id: self.selectedId,
-				Lat: self.coordinates.lat,
-				Lng: self.coordinates.lng
-			};
-			console.log(objToPost);
+			if (self.Rcoordinates == null) {
+				self.Rcoordinates = self.coordinates;
+				//console.log('Rcoordinates null')
+			}
 
 			var newReq = {
 				Id: self.selectedId,
 				Lat: self.coordinates.lat,
-				Lng: self.coordinates.lng
+				Lng: self.coordinates.lng,
+				RLat: self.Rcoordinates.lat,
+				RLng: self.Rcoordinates.lng
 			};
+			console.log(newReq);
 			self.socket.emit('identify-location', newReq);
-			toastr.success('Located success', { timeOut: 3000 });
+			toastr.success('Xác nhận vị trí thành công', { timeOut: 3000 });
 		},
 
 		geolocate: function() {
+			var self = this;
 			navigator.geolocation.getCurrentPosition(position => {
-				this.center = {
+				self.center = {
 					lat: position.coords.latitude,
 					lng: position.coords.longitude
 				};
@@ -240,33 +232,4 @@ export default {
 	height: 500px;
 	width: 100%;
 }
-/*#mapcomp {
-	width: 600px;
-}
-#containlist {
-	overflow-y: scroll;
-	min-width: 200px;
-	height: 550px;
-}
-h3 {
-	margin: 40px 0 0;
-}
-ul {
-	list-style-type: none;
-	padding: 0;
-}
-li {
-	display: inline-block;
-	margin: 0 0px;
-	width: 100%;
-}
-a {
-	color: #42b983;
-}
-.collection .collection-item {
-	padding: 0px 0px !important;
-}
-.card {
-	margin: 0rem 0 0rem 0;
-} */
 </style>
