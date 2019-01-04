@@ -10,7 +10,8 @@ var clients = {};
 var driversDecline = [];
 var count_public = 0;
 var req_detail = null;
-
+var req_detailsend = null;
+var range =null;
 var eventGetAll = (io, client) => {
     requestRepo.loadAll()
         .then(rows => {
@@ -102,6 +103,7 @@ var findNeareastDriver = (req_id) => {
         requestRepo.load(req_id)
             .then(req => {
                 if (req) {
+                    req_detailsend=req;
                     console.log('find nearest driver for request');
                     console.log(req);
 
@@ -128,6 +130,7 @@ var findNeareastDriver = (req_id) => {
                             }
                             console.log('long : ' + long)
                         });
+                        range=min;
                         resolve(driver);
                         console.log('resolve ' + driver.Id + driver.Name);
 
@@ -150,7 +153,18 @@ var fn = (io, data_2) => {
                 if (clients[driver.Id]) {
                     console.log('data send to driver is ');
                     console.log(datax);
-                    io.sockets.to(clients[driver.Id].socket).emit('driver-receive-new-request', datax)
+                    var datasend={
+                        Id:datax.Id,
+                        Lat:datax.Lat,
+                        Lng:datax.Lng,
+                        Address:datax.Address,
+                        Phone:datax.Phone,
+                        Note:datax.Note,
+                        Name:datax.Name,
+                        Long:range
+                    }
+                    console.log('range : '+range);
+                    io.sockets.to(clients[driver.Id].socket).emit('driver-receive-new-request', datasend)
                 }
                 else {
                     console.log('DRIVER SOCKET LOGIN ERR ')

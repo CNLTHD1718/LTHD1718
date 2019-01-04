@@ -3,7 +3,7 @@
     class="col s4"
     style="margin:0 auto;"
   >
-    <div id="dStatus" class="row d-flex justify-content-center cus-scrollbar style-1">
+    <div id="dStatus" class="row d-flex justify-content-center">
       <button
         id="btnOn"
         class="btn waves-effect waves-light btn-success"
@@ -98,10 +98,11 @@
                 <h6 class="font-weight-bold mb-1"><i class="fas fa-suitcase pr-2"></i>Nhận được yêu cầu mới</h6>
               </a>
               <!-- Post title -->
-              <h5 class="mb-2">Vị trí: </h5>
-              <h5 class="mb-2">Cách: 10km</h5>
-              <h5 class="mb-2">SĐT: </h5>
-              <h5 class="mb-2">Ghi chú</h5>
+							<h5 class="mb-2">Tên: {{resquestR.Name}}</h5>
+              <h5 class="mb-2">Vị trí: {{resquestR.Address}}</h5>
+              <!-- <h5 class="mb-2">Cách: {{resquestR.Long}}Km</h5> -->
+              <h5 class="mb-2">SĐT: {{resquestR.Phone}}</h5>
+              <h5 class="mb-2">Ghi chú: {{resquestR.Note}}</h5>
 
             </div>
             <!-- Grid column -->
@@ -177,7 +178,14 @@ export default {
 			driver: null,
 			req_id: null,
 			req_for_driver: {},
-			socket: io('localhost:1234')
+			socket: io('localhost:1234'),
+			resquestR:{
+				Name:null,
+				Address:null,
+				Phone:null,
+				Note:null,
+				Long:null,
+			},
 			//mapSettings
 		};
 	},
@@ -189,36 +197,7 @@ export default {
 			$('#modalreq').on('hidden.bs.modal', function() {
 				if (self.isDismiss == 1) self.declineRequest();
 			});
-		});
-		// if (localStorage.token_key && localStorage.ref_token && localStorage.uid) {
-		// 	axios({
-		// 		method: 'post',
-		// 		url: 'http://localhost:1234/User/auth',
-		// 		data: {},
-		// 		headers: {
-		// 			'x-access-token': localStorage.token_key
-		// 		}
-		// 	})
-		// 		.then(data => {
-		// 			self.loadData(localStorage.token_key);
-		// 			//self.driver.status =  parseInt( localStorage.driver_status);
-		// 		})
-		// 		.catch(err => {
-		// 			self
-		// 				.get_new_access_token(localStorage.ref_token, localStorage.uid)
-		// 				.then(user => {
-		// 					self.loadData(user.data.access_token);
-		// 					//self.driver.status = user.data.status;
-		// 				})
-		// 				.catch(err => {
-		// 					//console.log('err catch' + err);
-		// 					self.$router.push({ name: 'Login' });
-		// 				});
-		// 			console.log('get new access token');
-		// 		});
-		// } else {
-		// 	self.$router.push({ name: 'Login' });
-		// }
+		});		
 
 		// At this point, the child GmapMap has been mounted, but
 		// its map has not been initialized.
@@ -267,6 +246,14 @@ export default {
 				lat: data.Lat,
 				lng: data.Lng
 			};
+			var long = data.Long.toFixed(1);
+			self.resquestR={
+				Name:data.Name,
+				Address:data.Address,
+				Phone:data.Phone,
+				Note:data.Note,
+				Long:long,
+			}
 			self.req_for_driver = {
 				u_id: self.$store.state.user.Id,
 				req_id: data.Id,

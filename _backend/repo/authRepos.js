@@ -14,7 +14,7 @@ class AuthRepos {
         var token = jwt.sign(payload, config.secret, {
             expiresIn: config.lifetime
         })
-
+        console.log('new token success')
         return token;
     }
 
@@ -23,14 +23,16 @@ class AuthRepos {
         if (token) {
             jwt.verify(token, config.secret, (err, payload) => {
                 if (err) {
+                    console.log('err accesstoken')
+                    console.log(err);
                     res.statusCode = 401;
                     res.json({
                         msg: 'Invalid Token',
                         error: err
                     })
-                    console.log(err);
                 }
                 else {
+                    console.log('verified accesstoken')
                     req.token_payload = payload;
                     next();
                 }

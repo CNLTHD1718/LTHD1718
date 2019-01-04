@@ -33,7 +33,8 @@
       >
 
         <div
-          class="mt-3 list-group hoverable style-1  " style="height: 130px;overflow-y: auto;overflow-x: hidden"
+          class="mt-1 list-group  style-1 	p-1 "
+          style=""
           v-for="c in list"
           :key="c.Id"
           href="javascript:;"
@@ -44,7 +45,7 @@
           <a
             target="_blank"
             href="javascript:;"
-            class="card  list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+            class="card hoverable list-group-item list-group-item-action d-flex justify-content-between align-items-center"
           >
             <div>
               <p class="green-text mb-0"><i class="fa fa-user"></i>
@@ -119,19 +120,14 @@ export default {
 
 	mounted() {
 		var self = this;
-		axios
-			.get('http://localhost:1234/Request/req-unidentified')
-			.then(res => {
-				self.list = res.data;
-			})
-			.catch(err => {
-				console.log(err);
-			});
+
+		self.loadlist();
+
 		self.geolocate(); // map
 
 		self.socket.on('load-new-request', data => {
 			// console.log(data);
-			self.list = data;
+			self.list = data.data;
 		});
 
 		self.$refs.mapRef.$mapPromise.then(map => {
@@ -141,6 +137,48 @@ export default {
 	},
 
 	methods: {
+		loadlist() {
+			var self = this;
+
+			axios({
+				method: 'get',
+				url: 'http://localhost:1234/Request/req-unidentified',
+				data: {},
+				headers: {
+					'x-access-token': self.$store.state.token
+				}
+			})
+				.then(data => {
+					self.list = data.data;
+				})
+				.catch(err => {
+					self
+						.get_new_access_token(
+							self.$store.state.rfToken,
+							self.$store.state.user.Id
+						)
+						.then(data => {
+							console.log('update token');
+							self.$store.dispatch('updatetoken',  data ).then(() => {
+									console.log('update token success');
+									self.loadlist();
+								})
+								.catch(err => {
+									console.log('err ' + err);
+								});
+						})
+						.catch(err => {
+							self.$store
+								.dispatch('logout')
+								.then(() => {
+									self.$router.push({ name: 'Login' });
+								})
+								.catch(err => {
+									console.log('err ' + err);
+								});
+						});
+				});
+		},
 		getThisPlace(id, place) {
 			var self = this;
 			self.selectedId = id;
@@ -169,16 +207,38 @@ export default {
 				lat: location.latLng.lat(),
 				lng: location.latLng.lng()
 			};
-			toastr.remove();
-			toastr.clear();
-			toastr.success('Thay đổi vị trí thành công.', {
-				autoDismiss: true,
-				maxOpened: 1,
-				newestOnTop: true,
-				extendedTimeOut: 1000,
-				tapToDismiss: true,
-				timeOut: 1000
-			});
+var geocoder = new google.maps.Geocoder();
+var latlng = {lat: location.latLng.lat(), lng: location.latLng.lng()};
+geocoder.geocode({'location': latlng}, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+							console.log(results[0])
+							var address=results[0].formatted_address;
+							toastr.remove();
+							toastr.clear();
+							toastr.success(address, {
+								autoDismiss: true,
+								maxOpened: 1,
+								newestOnTop: true,
+								extendedTimeOut: 1000,
+								tapToDismiss: true,
+								timeOut: 1000
+							});
+              // map.setZoom(11);
+              // var marker = new google.maps.Marker({
+              //   position: latlng,
+              //   map: map
+              // });
+              // infowindow.setContent(results[0].formatted_address);
+              // infowindow.open(map, marker);
+            } else {
+              window.alert('No results found');
+            }
+          } else {
+            window.alert('Geocoder failed due to: ' + status);
+          }
+				});
+
 		},
 
 		locatePlace() {
@@ -215,6 +275,16 @@ export default {
 					lat: position.coords.latitude,
 					lng: position.coords.longitude
 				};
+			});
+		},
+		get_new_access_token(rf, id) {
+			return axios({
+				method: 'post',
+				url: 'http://127.0.0.1:1234/Auth/new_token',
+				data: {
+					ref_token: rf,
+					id: id
+				}
 			});
 		}
 	}

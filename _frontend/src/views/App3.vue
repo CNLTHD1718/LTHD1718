@@ -10,11 +10,41 @@
       <h3 class="font-weight-bold green-text">Danh sách yêu cầu</h3>
     </div>
     <div class="row">
-      <div class="col-1-5 cus-scrollbar style-1">
+      <div class="col-1-5-head ">
         <h4>
           <span class="badge badge-danger">Chưa Định Vị </span>
           <span class="badge badge-danger fr"> {{listRequest0.length}}</span>
         </h4>
+    </div>
+      <div class="col-1-5-head ">
+        <h4>
+          <span class="badge badge-primary">Đã Định Vị </span>
+          <span class="badge badge-primary fr"> {{listRequest1.length}}</span>
+        </h4>
+    </div>
+      <div class="col-1-5-head ">
+        <h4>
+          <span class="badge badge-success">Đã Có Xe Nhận </span>
+          <span class="badge badge-success fr"> {{listRequest2.length}}</span>
+        </h4>
+    </div>
+      <div class="col-1-5-head ">
+        <h4>
+          <span class="badge badge-warning">Đang Di Chuyển </span>
+          <span class="badge badge-warning fr"> {{listRequest3.length}}</span>
+        </h4>
+    </div>
+      <div class="col-1-5-head ">
+        <h4>
+          <span class="badge badge-danger">Đã Hoàn Tất </span>
+          <span class="badge badge-danger fr"> {{listRequest4.length}}</span>
+        </h4>
+    </div>
+
+    </div>
+    <div class="row">
+
+      <div class="col-1-5 cus-scrollbar style-1">
         <div
           class="list-group"
           v-for="c in listRequest0"
@@ -25,7 +55,10 @@
         >
 
           <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable style-1" style="height: 130px;overflow-y: auto;">
+          <div
+            class="card card-cascade narrower hoverable style-1"
+            style="height: 130px;overflow-y: auto;background:#e8e7e7"
+          >
             <!-- Card content -->
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
@@ -53,8 +86,6 @@
 
       </div>
       <div class="col-1-5 cus-scrollbar style-1">
-        <h4><span class="badge badge-primary">Đã Định Vị</span>
-          <span class="badge badge-primary fr"> {{listRequest1.length}}</span></h4>
         <div
           class="list-group"
           v-for="c in listRequest1"
@@ -65,7 +96,10 @@
         >
 
           <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable style-1" style="height: 130px;overflow-y: auto;">
+          <div
+            class="card card-cascade narrower hoverable style-1"
+            style="height: 130px;overflow-y: auto;background:#e8e7e7"
+          >
             <!-- Card content -->
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
@@ -93,8 +127,6 @@
         </div>
       </div>
       <div class="col-1-5 cus-scrollbar style-1">
-        <h4><span class="badge badge-success">Đã Có Xe Nhận</span>
-          <span class="badge badge-success fr"> {{listRequest2.length}}</span></h4>
         <div
           class="list-group"
           v-for="c in listRequest2"
@@ -105,7 +137,10 @@
         >
 
           <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable style-1" style="height: 130px;overflow-y: auto;">
+          <div
+            class="card card-cascade narrower hoverable style-1"
+            style="height: 130px;overflow-y: auto;background:#e8e7e7"
+          >
             <!-- Card content -->
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
@@ -133,8 +168,6 @@
         </div>
       </div>
       <div class="col-1-5 cus-scrollbar style-1">
-        <h4><span class="badge badge-warning">Đang Di Chuyển</span>
-          <span class="badge badge-warning fr"> {{listRequest3.length}}</span></h4>
         <div
           class="list-group"
           v-for="c in listRequest3"
@@ -145,7 +178,10 @@
         >
 
           <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable style-1" style="height: 130px;overflow-y: auto;">
+          <div
+            class="card card-cascade narrower hoverable style-1"
+            style="height: 130px;overflow-y: auto;background:#e8e7e7"
+          >
             <!-- Card content -->
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
@@ -173,8 +209,6 @@
         </div>
       </div>
       <div class="col-1-5 cus-scrollbar style-1">
-        <h4><span class="badge badge-light">Đã Hoàn Tất</span>
-          <span class="badge badge-light fr"> {{listRequest4.length}}</span></h4>
         <div
           class="list-group"
           v-for="c in listRequest4"
@@ -182,11 +216,15 @@
           href="javascript:;"
           :class="{active: c.Id === selectedIdRequest}"
           @click="getRequest(c.Id)"
-          data-toggle="modal" data-target="#modalreq"
+          data-toggle="modal"
+          data-target="#modalreq"
         >
 
           <!-- Card Narrower -->
-          <div class="card card-cascade narrower hoverable style-1" style="height: 130px;overflow-y: auto;">
+          <div
+            class="card card-cascade narrower hoverable style-1"
+            style="height: 130px;overflow-y: auto;background:#e8e7e7"
+          >
             <!-- Card content -->
             <a href="javascript:;">
               <div class="card-body card-body-cascade">
@@ -215,24 +253,41 @@
       </div>
     </div>
 
-
-
     <!-- Modal -->
-    <div class="modal fade top" id="modalreq" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false" style="display: none; padding-right: 17px;">
-    <div class="row d-flex justify-content-center col-7 modal-dialog modal-full-height modal-top modal-notify modal-success" role="document">
-      <!--Content-->
-      <div class="modal-content col-10 px-0">
-        <!--Header-->
-        <div class="modal-header">
-          <p class="heading lead">Thông Tin Yêu Cầu</p>
+    <div
+      class="modal fade top"
+      id="modalreq"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      data-backdrop="false"
+      style="display: none; padding-right: 17px;"
+    >
+      <div
+        class="row d-flex justify-content-center col-7 modal-dialog modal-full-height modal-top modal-notify modal-success"
+        role="document"
+      >
+        <!--Content-->
+        <div class="modal-content col-10 px-0">
+          <!--Header-->
+          <div class="modal-header">
+            <p class="heading lead">Thông Tin Yêu Cầu</p>
 
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" class="white-text">×</span>
-          </button>
-        </div>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span
+                aria-hidden="true"
+                class="white-text"
+              >×</span>
+            </button>
+          </div>
 
-        <!--Body-->
-         <div class="modal-body">
+          <!--Body-->
+          <div class="modal-body">
             <div
               class="row col-lg-12 "
               style="padding-bottom: 10px; !important"
@@ -243,7 +298,10 @@
 
                 <!-- Post title -->
                 <!-- Card Narrower -->
-                <div class="card card-cascade narrower hoverable  style-1" style="height: 130px;overflow-y: auto;">
+                <div
+                  class="card card-cascade narrower hoverable  style-1"
+                  style="height: 130px;overflow-y: auto;background: #e0dfdf;"
+                >
                   <!-- Card content -->
                   <a href="javascript:;">
                     <div class="card-body card-body-cascade">
@@ -272,7 +330,10 @@
               <div class="col-md-6 ">
                 <h6 class="font-weight-bold mb-1 green-text"><i class="fas fa-car pr-2"></i>Thông Tin Tài Xế</h6>
                 <!-- Card Narrower -->
-                <div class="card card-cascade narrower style-1" style="height: 130px;overflow-y: auto;">
+                <div
+                  class="hoverable card card-cascade narrower style-1"
+                  style="height: 130px;overflow-y: auto;background: #e0dfdf;"
+                >
                   <!-- Card content -->
                   <a href="javascript:;">
                     <div
@@ -319,22 +380,21 @@
                   style="width:100%;  height: 320px;"
                 >
                   <!-- :center="center" -->
-                  <gmap-marker
+                  <!-- <gmap-marker
                     ref="myMarker"
                     v-bind:position="oldPosition"
                     :draggable="true"
                     :icon="{ url: require('../assets/motobike.png')}"
-                  ></gmap-marker>
+                  ></gmap-marker> -->
                 </gmap-map>
               </div>
             </div>
           </div>
 
+        </div>
+        <!--/.Content-->
       </div>
-      <!--/.Content-->
     </div>
-  </div>
-    
 
   </div>
 </template>
@@ -390,14 +450,8 @@ export default {
 
 	mounted() {
 		var self = this;
-		axios
-			.get('http://localhost:1234/Request')
-			.then(res => {
-				self.reloadRequest(res.data);
-			})
-			.catch(err => {
-				console.log(err);
-			});
+
+		self.loadRequest();
 		self.socket.emit('add-user', { username: self.$store.state.user.Id });
 		self.geolocate(); //create map
 
@@ -416,6 +470,57 @@ export default {
 	},
 
 	methods: {
+		loadRequest() {
+      var self = this;
+      axios({
+				method: 'get',
+				url: 'http://localhost:1234/Request',
+				data: {},
+				headers: {
+					'x-access-token': self.$store.state.token
+				}
+      })
+      .then(res => {
+          self.reloadRequest(res.data);
+				})
+				.catch(err => {
+            self
+						.get_new_access_token(
+							self.$store.state.rfToken,
+							self.$store.state.user.Id
+						)
+						.then(data => {
+							console.log('update token');
+							self.$store.dispatch('updatetoken',  data ).then(() => {
+									console.log('update token success');
+									self.loadRequest();
+								})
+								.catch(err => {
+									console.log('err ' + err);
+								});
+						})
+						.catch(err => {
+							self.$store
+								.dispatch('logout')
+								.then(() => {
+									self.$router.push({ name: 'Login' });
+								})
+								.catch(err => {
+									console.log('err ' + err);
+								});
+						});
+
+        })
+      
+			// axios
+			// 	.get('http://localhost:1234/Request')
+			// 	.then(res => {
+			// 		self.reloadRequest(res.data);
+			// 	})
+			// 	.catch(err => {
+			// 		console.log(err);
+			// 	});
+		},
 		showdirect(data) {
 			if (data.RLat) {
 				var self = this;
@@ -600,12 +705,22 @@ export default {
 			navigator.geolocation.getCurrentPosition(position => {
 				setTimeout(function() {
 					self.directionsDisplay = new google.maps.DirectionsRenderer();
-					self.marker = self.$refs.myMarker.$markerObject;
+					// self.marker = self.$refs.myMarker.$markerObject;
 					self.center = {
 						lat: position.coords.latitude,
 						lng: position.coords.longitude
 					};
 				}, 2000); // async this after create map
+			});
+		},
+		get_new_access_token(rf, id) {
+			return axios({
+				method: 'post',
+				url: 'http://127.0.0.1:1234/Auth/new_token',
+				data: {
+					ref_token: rf,
+					id: id
+				}
 			});
 		}
 	}
@@ -619,6 +734,15 @@ export default {
 }
 .dvif {
 	height: 6px;
+}
+
+.col-1-5-head {
+width: 20%;
+	float: left;
+	position: relative;
+	min-height: 1px;
+	padding-right: 5px;
+	padding-left: 5px;
 }
 .col-1-5 {
 	width: 20%;

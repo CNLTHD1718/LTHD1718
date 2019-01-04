@@ -20,7 +20,7 @@ router.get('/req-unidentified', (req, res) => {// get list request
     requestRepo.loadUnidentified()
         .then(rows => {
             res.json(rows);
-            console.log(rows);
+            console.log(rows.length);
         })
         .catch(err => {
             console.log(err);

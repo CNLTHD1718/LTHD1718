@@ -67,10 +67,9 @@ router.beforeEach((to, from, next) => {
 		if (store.getters.isLoggedIn) {
 			if (apptype == to.path) {
 				next();
-			} 
-			// else {
-			// 	next('/Login');
-			// }
+			} else {
+				next('/Login');
+			}
 		} else {
 			next('/Login');
 		}

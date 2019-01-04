@@ -1,5 +1,5 @@
 module.exports = {
     'secret': 'supersecret',
-    'lifetime': 10,
+    'lifetime': 5,
     'NTimeFind':10
   };

@@ -6,10 +6,11 @@ var express = require('express'),
 router.post('/new_token', (req, res) => {
     var user_rf_token = req.body.ref_token;
     var user_id = req.body.id;
-    console.log('new token' + req.body);
+    console.log('new token', req.body);
     if (user_rf_token && user_id) {
         UserRepo.getByToken(user_id, user_rf_token)
             .then(user => {
+                console.log('find user ',user);
                 var acToken = AuthRepo.generateAccessToken(user);
                 var user_res = {
                     auth: true,
@@ -21,6 +22,7 @@ router.post('/new_token', (req, res) => {
                 // }
                 res.json(user_res);
             }).catch(err => {
+                console.log('error get user by token');
                 res.statusCode = 500;
                 res.end('View error log on console');
                 console.log(err);
@@ -41,12 +43,12 @@ router.post('/login', (req, res) => {
     //var type = req.body.Type;
     UserRepo.login(obj).then(user => {
         console.log('check login')
-        console.log(user);
+        //console.log(user);
         if (user) {
             var acToken = AuthRepo.generateAccessToken(user);
             var rfToken = AuthRepo.generateRefreshToken();
             console.log('logged')
-            console.log(user)
+           // console.log(user)
             AuthRepo.updateRefreshToken(user.Id, rfToken)
                 .then(() => {
                     var udetail = {};
