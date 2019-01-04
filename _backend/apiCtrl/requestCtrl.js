@@ -29,6 +29,20 @@ router.get('/req-unidentified', (req, res) => {// get list request
         })
 })
 
+router.get('/req-history', (req, res) => {// get list request
+    var phone = req.query.Phone;
+    console.log('phone___  ',req.query)
+    requestRepo.loadHistory(phone)
+        .then(rows => {
+            res.json(rows);
+            console.log(rows.length);
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('View error log on server console');
+        })
+})
 router.get('/add', (req, res) => {//add using get
     var obj = {
         Name: req.query.Name,

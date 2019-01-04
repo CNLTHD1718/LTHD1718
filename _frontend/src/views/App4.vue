@@ -346,6 +346,7 @@ export default {
 			self.socket.emit('driver-done-request', self.req_for_driver);
 			self.updateDriverLocationAfterDone();
 			self.directionsDisplay.setMap(null); //delete previous direction
+			self.circle.setCenter(self.center);
 
 			toastr.success('Bạn đã hoàn thành chuyến.', { timeOut: 3000 });
 			$('#modelProcess').fadeOut();

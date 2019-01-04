@@ -34,7 +34,7 @@
 
                 <!-- Material input email -->
                 <div class="md-form">
-                  <i class="fa fa-envelope prefix black-text"></i>
+                  <i class="fa fa-phone prefix black-text"></i>
                   <input
                     type="email"
                     id="txtPhone"
@@ -48,7 +48,7 @@
 
                 <!-- Material input email -->
                 <div class="md-form">
-                  <i class="fa fa-exclamation-triangle prefix black-text"></i>
+                  <i class="fa fa-address-card prefix black-text"></i>
                   <input
                     type="email"
                     id="txtAddress"
@@ -62,14 +62,17 @@
 
                 <!--Textarea with icon prefix-->
                 <div class="md-form amber-textarea active-amber-textarea-2">
-                  <i class="fas fa-pencil-alt prefix black-text"></i>
+                  <i class="fa fa-sticky-note prefix black-text"></i>
                   <textarea
                     type="text"
                     id="txtNote"
                     class="md-textarea form-control black-text"
                     rows="3"
                   ></textarea>
-                  <label for="txtNote" class="black-text">Ghi chú</label>
+                  <label
+                    for="txtNote"
+                    class="black-text"
+                  >Ghi chú</label>
                 </div>
 
                 <div class="text-center py-4 mt-3">
@@ -87,7 +90,73 @@
           </div>
           <!-- Card -->
         </div>
+        <div
+          class="col-md-6"
+          style="height:100%"
+        >
+          <!-- Card -->
+          <div class="card">
 
+            <!-- Card body -->
+            <div class="card-body">
+
+              <!-- Material form register -->
+
+              <p class="h4 text-center py-3">Lịch Sử Khách Hàng</p>
+
+              <!-- Material input email -->
+              <div class="form-inline md-form form-sm active-cyan active-cyan-2 mt-2">
+                <a @click="getHistory"><i
+                    class="fas fa-search active"
+                    aria-hidden="true"
+                  ></i></a>
+                <input
+                  class="form-control form-control-sm ml-3 w-75"
+                  type="text"
+                  id="textsearch"
+                  placeholder="Search"
+                  aria-label="Search"
+                >
+              </div>
+              <div
+                class="col-12 cus-scrollbar style-1"
+                style="max-height:62vh"
+              > <div
+                  class="list-group mb-1"
+                  href="javascript:;"
+          v-for="c in listHistory"
+          :key="c.Id"
+                >
+                  <div class="narrower  style-1 border">
+                    <!-- Card content -->
+                    <a href="javascript:;">
+                      <div class="card-body card-body-cascade py-1 ">
+                        <!-- Label -->
+                        <h6 class="green-text"><i class="fa fa-clock"></i>
+                          <font class="black-text font-weight-bold"> {{c.DateCreate}}</font>
+                        </h6>
+                        <h6 class="green-text"><i class="fa fa-user"></i>
+                          <font class="black-text font-weight-bold"> {{c.Name}}</font>
+                        </h6>
+                        <!-- Title -->
+                        <h6 class="green-text"><i class="fa fa-map-marker"></i>
+                          <font class="black-text "> {{c.Address}}</font>
+                        </h6>
+                        <!-- Text -->
+                        <h6 class="green-text"><i class="fa fa-sticky-note"></i>
+                          <font class="black-text "> {{c.Note}}</font>
+                        </h6>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+
+          </div>
+          <!-- Card -->
+        </div>
       </div>
     </div>
 
@@ -108,7 +177,8 @@ export default {
 	data() {
 		return {
 			socket: io('localhost:1234'),
-			timeOut: null
+      timeOut: null,
+      listHistory:{}
 		};
 	},
 	mounted() {
@@ -148,21 +218,60 @@ export default {
 			$('#txtPhone').val('');
 			$('#txtNote').val('');
 		},
-		AddRequest() {
-			//var self = this;
-			var objToPost = {
-				Name: document.getElementById('txtName').value,
-				Address: document.getElementById('txtAddress').value,
-				Phone: document.getElementById('txtPhone').value,
-				Note: document.getElementById('txtNote').value
-			};
-			axios
-				.post('http://localhost:1234/Request/add', objToPost)
+		get_new_access_token(rf, id) {
+			return axios({
+				method: 'post',
+				url: 'http://127.0.0.1:1234/Auth/new_token',
+				data: {
+					ref_token: rf,
+					id: id
+				}
+			});
+		},
+
+		getHistory() {
+			var self = this;
+			var phone = document.getElementById('textsearch').value;
+			axios({
+				method: 'get',
+				url: 'http://localhost:1234/Request/req-history?Phone='+phone,
+				//data: { Phone: phone },
+				headers: {
+					'x-access-token': self.$store.state.token
+				}
+			})
 				.then(res => {
-					alert('success ');
+					self.listHistory=res.data;
 				})
 				.catch(err => {
-					console.log(err);
+					self
+						.get_new_access_token(
+							self.$store.state.rfToken,
+							self.$store.state.user.Id
+						)
+						.then(data => {
+							console.log('update token');
+							self.$store
+								.dispatch('updatetoken', data)
+								.then(() => {
+									console.log('update token success');
+                  self.getHistory();
+                  return;
+								})
+								.catch(err => {
+									console.log('err ' + err);
+								});
+						})
+						.catch(err => {
+							self.$store
+								.dispatch('logout')
+								.then(() => {
+									self.$router.push({ name: 'Login' });
+								})
+								.catch(err => {
+									console.log('err ' + err);
+								});
+						});
 				});
 		}
 	}

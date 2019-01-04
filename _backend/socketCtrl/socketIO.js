@@ -29,6 +29,7 @@ var eventGetAll = (io, client) => {
 var eventGetUnidentified = (io, client) => {
     requestRepo.loadUnidentified()
         .then(rows => {
+            console.log('load-new-request');
             io.sockets.emit('load-new-request', rows);
         })
         .catch(err => {

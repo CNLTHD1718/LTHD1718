@@ -96,6 +96,9 @@ class RequestRepo {
         return DbFunction.run(`UPDATE RequestDetail 
         SET DateDone = ? WHERE RequestID = ? AND DriverID = ?`, [time, obj.ReqID, obj.DriID]);
     }
+    loadHistory(phone){        
+        return DbFunction.getAll(`SELECT * FROM Request WHERE Phone = ?`, [phone])
+    }
 }
 
 module.exports = RequestRepo;

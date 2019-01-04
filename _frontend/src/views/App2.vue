@@ -5,7 +5,7 @@
   >
     <div class="row">
       <div class="col-md-3">
-        <h5 class="pt-3"><strong style="color:#00BA51;">Danh sách yêu cầu {{list.length}}</strong></h5>
+        <h5 class="pt-3"><strong style="color:#00BA51;">Danh sách yêu cầu </strong></h5>
       </div>
       <div class="col-md-9">
         <div
@@ -114,7 +114,8 @@ export default {
 			Rcoordinates: null,
 			currentPlace: null,
 			marker: null,
-			socket: io('localhost:1234')
+			socket: io('localhost:1234'),
+			 infowindow : new google.maps.InfoWindow()
 		};
 	},
 
@@ -126,8 +127,8 @@ export default {
 		self.geolocate(); // map
 
 		self.socket.on('load-new-request', data => {
-			// console.log(data);
-			self.list = data.data;
+			console.log('load-new-request ',data);
+			self.list = data;
 		});
 
 		self.$refs.mapRef.$mapPromise.then(map => {
@@ -159,7 +160,9 @@ export default {
 						)
 						.then(data => {
 							console.log('update token');
-							self.$store.dispatch('updatetoken',  data ).then(() => {
+							self.$store
+								.dispatch('updatetoken', data)
+								.then(() => {
 									console.log('update token success');
 									self.loadlist();
 								})
@@ -207,38 +210,43 @@ export default {
 				lat: location.latLng.lat(),
 				lng: location.latLng.lng()
 			};
-var geocoder = new google.maps.Geocoder();
-var latlng = {lat: location.latLng.lat(), lng: location.latLng.lng()};
-geocoder.geocode({'location': latlng}, function(results, status) {
-          if (status === 'OK') {
-            if (results[0]) {
-							console.log(results[0])
-							var address=results[0].formatted_address;
-							toastr.remove();
-							toastr.clear();
-							toastr.success(address, {
-								autoDismiss: true,
-								maxOpened: 1,
-								newestOnTop: true,
-								extendedTimeOut: 1000,
-								tapToDismiss: true,
-								timeOut: 1000
-							});
-              // map.setZoom(11);
-              // var marker = new google.maps.Marker({
-              //   position: latlng,
-              //   map: map
-              // });
-              // infowindow.setContent(results[0].formatted_address);
-              // infowindow.open(map, marker);
-            } else {
-              window.alert('No results found');
-            }
-          } else {
-            window.alert('Geocoder failed due to: ' + status);
-          }
-				});
-
+			var geocoder = new google.maps.Geocoder();
+			var latlng = { lat: location.latLng.lat(), lng: location.latLng.lng() };
+			geocoder.geocode({ location: latlng }, function(results, status) {
+				if (status === 'OK') {
+					if (results[0]) {
+						console.log(results[0]);
+						var address = results[0].formatted_address;
+						var marker2 = self.$refs.myMarker.$markerObject;
+						
+						var map = self.$refs.mapRef.$mapObject;
+						self.infowindow.setContent('');
+						self.infowindow.setContent(results[0].formatted_address);
+						self.infowindow.open(map, marker2);
+						// toastr.remove();
+						// toastr.clear();
+						// toastr.success(address, {
+						// 	autoDismiss: true,
+						// 	maxOpened: 1,
+						// 	newestOnTop: true,
+						// 	extendedTimeOut: 1000,
+						// 	tapToDismiss: true,
+						// 	timeOut: 1000
+						// });
+						// map.setZoom(11);
+						// var marker = new google.maps.Marker({
+						//   position: latlng,
+						//   map: map
+						// });
+						// infowindow.setContent(results[0].formatted_address);
+						// infowindow.open(map, marker);
+					} else {
+						window.alert('No results found');
+					}
+				} else {
+					window.alert('Geocoder failed due to: ' + status);
+				}
+			});
 		},
 
 		locatePlace() {
