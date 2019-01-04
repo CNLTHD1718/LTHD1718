@@ -185,7 +185,7 @@ export default {
 		getThisPlace(id, place) {
 			var self = this;
 			self.selectedId = id;
-
+self.infowindow.setContent('');
 			var geocoder = new google.maps.Geocoder();
 			var address = place;
 			geocoder.geocode({ address: address }, function(results, status) {

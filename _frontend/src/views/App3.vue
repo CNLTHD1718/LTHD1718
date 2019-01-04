@@ -570,7 +570,8 @@ export default {
 				id: self.selectedIdRequest,
 				uid: self.$store.state.user.Id
 			};
-			self.socket.emit('get-detail-request', req);
+      self.socket.emit('get-detail-request', req);
+      self.directionsDisplay.setMap(null);
 			$('#modalreq').modal('show');
 		},
 		handleRequest2() {
